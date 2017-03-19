@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BotChallenge.BLL.Models
 {
-    public class Point
+    public struct Point
     {
         public PointType Type { get; set; }
         public Int32? ObjectId { get; set; }

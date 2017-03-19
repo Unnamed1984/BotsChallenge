@@ -9,6 +9,7 @@ namespace BotChallenge.BLL.Models.Enums
     {
         RedBot,
         BlueBot,
-        Obtacle
+        Obtacle,
+        Empty
     }
 }

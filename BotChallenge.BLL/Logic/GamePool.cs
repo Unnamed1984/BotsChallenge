@@ -41,6 +41,7 @@ namespace BotChallenge.BLL.Logic
         {
             Game g = freeGames.Dequeue();
             busyGames.Add(g);
+            g.Run();
         }
     }
 }

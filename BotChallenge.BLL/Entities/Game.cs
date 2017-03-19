@@ -17,11 +17,7 @@ namespace BotChallenge.BLL.Models
         public Int32 String { get; set; }
         public Field Field { get; set; }
 
-        public List<Command> Run()
-        {
-            // Here will be something with bot's interaction
-            return new List<Command>();
-        }
+        #region Player's registration and notification
 
         public void RegisterPlayer(Player p)
         {
@@ -39,5 +35,16 @@ namespace BotChallenge.BLL.Models
         public void SubscribeOnThisGame(Action method) => FilledGameEvent += method;
 
         public void RaiseFilledGameEvent() => FilledGameEvent();
+
+        #endregion
+
+        #region Bot's interaction
+
+        public List<Command> Run()
+        {
+            // Here will be something with bot's interaction
+            return new List<Command>();
+        }
+        #endregion
     }
 }
