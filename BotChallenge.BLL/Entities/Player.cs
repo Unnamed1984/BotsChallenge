@@ -12,6 +12,7 @@ namespace BotChallenge.BLL.Models
         public String Name { get; set; }
         public Game Game { get; set; }
 
+
         public bool SetReady()
         {
             return true;
