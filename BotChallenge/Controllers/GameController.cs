@@ -1,4 +1,4 @@
-﻿using BotChallenge.Models;
+﻿using BotChallenge.BLL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,13 +21,13 @@ namespace BotChallenge.Controllers
         [HttpPost]
         public ActionResult RegisterForGame(Player p)
         {
-
+            return null;
         }
 
         [NonAction]
         public Game FindFreeGame()
         {
-            
+            return null;
         }
     }
 }
