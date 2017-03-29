@@ -1,0 +1,24 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Waiting...</title>
+    @Styles.Render("~/Content/css")
+</head>
+<body class="flex-align-baseline">
+    <form class="center-form center-form-margin-top">
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped active progress-bar-zero" role="progressbar"
+                 aria-valuenow="100" aria-valuemin="100" aria-valuemax="100" id="progress">
+                Waiting for another player...
+            </div>
+        </div>
+        <a href="/Game/Register" class="btn btn-danger btn-center btn-sm" onclick="cancel(event);" id="cancel-btn">Cancel</a>
+    </form>
+    @Scripts.Render("~/bundles/waiting")
+</body>
+</html>

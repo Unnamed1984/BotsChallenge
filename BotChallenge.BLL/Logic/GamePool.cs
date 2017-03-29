@@ -7,39 +7,44 @@ using System.Threading.Tasks;
 
 namespace BotChallenge.BLL.Logic
 {
-    public static class GamePool
+    public class GamePool
     {
-        private static Queue<Game> freeGames;
-        public static List<Game> busyGames;
+        private Queue<Game> freeGames = new Queue<Game>();
+        public List<Game> busyGames = new List<Game>();
 
-        public static Game CreateGame()
+        public Game CreateGame()
         {
             Game g = new Game();
-            g.SubscribeOnThisGame(() => StartGame());
+            g.SubscribeOnThisGame((id1, id2) => StartGame());
 
             freeGames.Enqueue(g);
             return g;
         }
 
-        public static String RegisterPlayer(Player player)
+        public Game RegisterPlayer(Player player)
         {
-            if (freeGames.Any())
+            if (player.Game == null)
             {
-                Game g = freeGames.Peek();
-                g.RegisterPlayer(player);
-                return g.Id;
+                if (freeGames.Any())
+                {
+                    Game g = freeGames.Peek();
+                    g.RegisterPlayer(player);
+                    return g;
+                }
+                else
+                {
+                    Game g = CreateGame();
+                    g.RegisterPlayer(player);
+                    return g;
+                }
             }
-            else
-            {
-                Game g = CreateGame();
-                g.RegisterPlayer(player);
-                return g.Id;
-            }
+            return player.Game;
         }
 
-        public static void StartGame()
+        public void StartGame()
         {
             Game g = freeGames.Dequeue();
+            g.IsReady = true;
             busyGames.Add(g);
         }
     }
