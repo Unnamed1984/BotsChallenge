@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BotChallenge.LanguageCompiler.Exceptions
+namespace BotChallenge.Compiler.Exceptions
 {
     /// <summary>
     /// Exception, that generates if user requests compiler object for not supported langnguage. 

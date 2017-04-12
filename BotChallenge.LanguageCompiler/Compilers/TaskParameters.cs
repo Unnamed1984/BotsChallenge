@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BotChallenge.LanguageCompiler.Compilers
+namespace BotChallenge.Compiler.Compilers
 {
     public class TaskParameters
     {

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BotChallenge.LanguageCompiler.Compilers;
-using BotChallenge.LanguageCompiler.Exceptions;
+using BotChallenge.Compiler.Compilers;
+using BotChallenge.Compiler.Exceptions;
 
-namespace BotChallenge.LanguageCompiler.CompilerProvider
+namespace BotChallenge.Compiler.CompilerProvider
 {
-    class CompilerProvider : ICompilerProvider
+    public class CompilerProvider : ICompilerProvider
     {
         public ICompiler GetCompilerForLanguage(CompilerSupportedLanguages language)
         {

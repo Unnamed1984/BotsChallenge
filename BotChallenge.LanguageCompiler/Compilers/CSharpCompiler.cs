@@ -9,7 +9,7 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace BotChallenge.LanguageCompiler.Compilers
+namespace BotChallenge.Compiler.Compilers
 {
     class CSharpCompiler : ICompiler
     {
@@ -26,7 +26,7 @@ namespace BotChallenge.LanguageCompiler.Compilers
                 }
             }
 
-            bool compileResult = compileCodeClasses(path, out errors, codeClasses);
+            bool compileResult = compileCodeClasses(path, out errors, this.extendBotCodeWithCoreClasses(codeClasses));
 
             if (!compileResult)
             {
@@ -36,12 +36,23 @@ namespace BotChallenge.LanguageCompiler.Compilers
             return verifyTaskLogic(path, task, out errors);
         }
 
+        private string[] extendBotCodeWithCoreClasses(string[] botCodeClasses)
+        {
+            string[] coreFileContents = AdditionFileProvider.LoadFiles(Path.Combine("CSharp", "BotCodeFile.cs"), Path.Combine("CSharp", "ProgramCodeFile.cs"));
+
+            List<string> allClassContents = new List<string>();
+            allClassContents.AddRange(coreFileContents);
+            allClassContents.AddRange(botCodeClasses);
+
+            return allClassContents.ToArray();
+        } 
+
         private bool compileCodeClasses(string pathToAssembly, out List<string> errors, string[] codeClasses)
         {
             errors = new List<string>();
 
             CSharpCodeProvider cscp = new CSharpCodeProvider(new Dictionary<string, string>()
-            { { "CompilerVersion", "v4.5" } });
+            { { "CompilerVersion", "v3.5" } });
 
             CompilerParameters parameters = new CompilerParameters(new[] { "mscorlib.dll", "System.Core.dll" }, pathToAssembly);
             parameters.GenerateExecutable = true;
@@ -51,7 +62,7 @@ namespace BotChallenge.LanguageCompiler.Compilers
             if (results.Errors.HasErrors)
             {
                 errors = new List<string>(results.Errors.Cast<CompilerError>().Select(ce => $"Compiler error: { ce.Line } line { ce.Column } column -> { ce.ErrorText }"));
-                return results.Errors.HasErrors;
+                return false;
             }
 
             return true;

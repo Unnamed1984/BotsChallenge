@@ -45,14 +45,13 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestCodeDOM.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BotChallenge.Compiler\BotChallenge.Compiler.csproj">
-      <Project>{c514b963-0df9-4a7a-b6fa-aa361f362c3d}</Project>
+    <ProjectReference Include="..\BotChallenge.LanguageCompiler\BotChallenge.Compiler.csproj">
+      <Project>{a7cba876-442a-4673-b40e-bb537a44b583}</Project>
       <Name>BotChallenge.Compiler</Name>
     </ProjectReference>
   </ItemGroup>

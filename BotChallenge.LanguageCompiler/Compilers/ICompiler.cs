@@ -1,11 +1,11 @@
-﻿using BotChallenge.LanguageCompiler.Compilers;
+﻿using BotChallenge.Compiler.Compilers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BotChallenge.LanguageCompiler
+namespace BotChallenge.Compiler
 {
     public interface ICompiler
     {
