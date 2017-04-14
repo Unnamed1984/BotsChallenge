@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BotChallenge.Compiler.CompilerProvider
+namespace BotChallenge.Compiler.LanguageProviders
 {
     public enum CompilerSupportedLanguages
     {

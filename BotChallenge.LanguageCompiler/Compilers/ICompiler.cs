@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BotChallenge.Compiler.Compilers.Models;
 
 namespace BotChallenge.Compiler
 {
     public interface ICompiler
     {
-        bool VerifyCode(TaskParameters task, out List<string> errors, params string[] codeClasses);
+        CompilationResult VerifyCode(TaskParameters task, params string[] codeClasses);
     }
 }

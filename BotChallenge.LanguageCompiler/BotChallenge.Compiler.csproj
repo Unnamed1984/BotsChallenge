@@ -7,8 +7,8 @@
     <ProjectGuid>{A7CBA876-442A-4673-B40E-BB537A44B583}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BotChallenge.LanguageCompiler</RootNamespace>
-    <AssemblyName>BotChallenge.LanguageCompiler</AssemblyName>
+    <RootNamespace>BotChallenge.Compiler</RootNamespace>
+    <AssemblyName>BotChallenge.Compiler</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,12 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompilerProvider\CompilerProvider.cs" />
-    <Compile Include="CompilerProvider\CompilerSupportedLanguages.cs" />
+    <Compile Include="CodeRunners\CSharpRunner.cs" />
+    <Compile Include="CodeRunners\IRunner.cs" />
+    <Compile Include="CodeRunners\Models\Field.cs" />
+    <Compile Include="LanguageProviders\LanguageProvider.cs" />
+    <Compile Include="LanguageProviders\CompilerSupportedLanguages.cs" />
     <Compile Include="Compilers\AdditionFileProvider.cs" />
     <Compile Include="Compilers\CSharpCompiler.cs" />
     <Compile Include="Compilers\ICompiler.cs" />
-    <Compile Include="CompilerProvider\ICompilerProvider.cs" />
+    <Compile Include="LanguageProviders\ILanguageProvider.cs" />
+    <Compile Include="Compilers\Models\CompilationResult.cs" />
+    <Compile Include="Compilers\Models\CSharpRunnerInformation.cs" />
+    <Compile Include="Compilers\Models\RunnerInformation.cs" />
     <Compile Include="Compilers\TaskParameters.cs" />
     <Compile Include="Exceptions\CompilerException.cs" />
     <Compile Include="Exceptions\UnSupportedLanguageException.cs" />

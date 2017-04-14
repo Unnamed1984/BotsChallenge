@@ -8,12 +8,13 @@ using System.CodeDom.Compiler;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using BotChallenge.Compiler.Compilers.Models;
 
 namespace BotChallenge.Compiler.Compilers
 {
     class CSharpCompiler : ICompiler
     {
-        public bool VerifyCode(TaskParameters task, out List<string> errors, params string[] codeClasses)
+        public CompilationResult VerifyCode(TaskParameters task, params string[] codeClasses)
         {
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CompilerTempFiles", Guid.NewGuid().ToString() + ".exe");
 
@@ -26,14 +27,22 @@ namespace BotChallenge.Compiler.Compilers
                 }
             }
 
-            bool compileResult = compileCodeClasses(path, out errors, this.extendBotCodeWithCoreClasses(codeClasses));
+            CompilationResult compileResult = compileCodeClasses(path, this.extendBotCodeWithCoreClasses(codeClasses));
 
-            if (!compileResult)
+            if (!compileResult.IsCodeCorrect)
             {
-                return false;
+                return compileResult;
             }
 
-            return verifyTaskLogic(path, task, out errors);
+            bool taskCompliance = verifyTaskLogic(path, task);
+
+            if (!taskCompliance)
+            {
+                compileResult.Errors = compileResult.Errors ?? new List<string>();
+                compileResult.Errors.Add("You haven't declared classes for all required bots. Please add them.");
+            }
+
+            return compileResult;
         }
 
         private string[] extendBotCodeWithCoreClasses(string[] botCodeClasses)
@@ -47,30 +56,34 @@ namespace BotChallenge.Compiler.Compilers
             return allClassContents.ToArray();
         } 
 
-        private bool compileCodeClasses(string pathToAssembly, out List<string> errors, string[] codeClasses)
+        private CompilationResult compileCodeClasses(string pathToAssembly, string[] codeClasses)
         {
-            errors = new List<string>();
 
             CSharpCodeProvider cscp = new CSharpCodeProvider(new Dictionary<string, string>()
-            { { "CompilerVersion", "v3.5" } });
+            { { "CompilerVersion", "v4.0" } });
 
             CompilerParameters parameters = new CompilerParameters(new[] { "mscorlib.dll", "System.Core.dll" }, pathToAssembly);
             parameters.GenerateExecutable = true;
 
-            CompilerResults results = cscp.CompileAssemblyFromSource(parameters, codeClasses);
+            CompilerResults compilationResults = cscp.CompileAssemblyFromSource(parameters, codeClasses);
 
-            if (results.Errors.HasErrors)
+            CompilationResult returnResult = new CompilationResult();
+            returnResult.InformationForCodeRunner = new CSharpRunnerInformation(pathToAssembly);
+
+            if (compilationResults.Errors.HasErrors)
             {
-                errors = new List<string>(results.Errors.Cast<CompilerError>().Select(ce => $"Compiler error: { ce.Line } line { ce.Column } column -> { ce.ErrorText }"));
-                return false;
+                returnResult.Errors = new List<string>(compilationResults.Errors.Cast<CompilerError>().Select(ce => $"Compiler error: { ce.Line } line { ce.Column } column -> { ce.ErrorText }"));
+                returnResult.IsCodeCorrect = false;
+
+                return returnResult;
             }
 
-            return true;
+            returnResult.IsCodeCorrect = true;
+            return returnResult;
         }
 
-        private bool verifyTaskLogic(string assemblyPath, TaskParameters task, out List<string> errors)
+        private bool verifyTaskLogic(string assemblyPath, TaskParameters task)
         {
-            errors = new List<string>();
             Assembly assembly = Assembly.LoadFile(assemblyPath);
 
             Type[] types = assembly.GetExportedTypes();
@@ -86,13 +99,7 @@ namespace BotChallenge.Compiler.Compilers
                 }
             }
 
-            if (task.RequiredBots != botCount)
-            {
-                errors.Add("All bots classes couldn't be found. Please add some bots.");
-                return false;
-            }
-
-            return true;
+            return task.RequiredBots == botCount;
         }
     }
 }

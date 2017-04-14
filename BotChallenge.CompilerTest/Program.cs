@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BotChallenge.Compiler.CompilerProvider;
+using BotChallenge.Compiler.LanguageProviders;
 using BotChallenge.Compiler;
 using BotChallenge.Compiler.Compilers;
+using BotChallenge.Compiler.Compilers.Models;
 
 namespace BotChallenge.CompilerTest
 {
@@ -21,7 +22,6 @@ namespace BotChallenge.CompilerTest
                         {
                             public void Move() 
                             {
-                                Lesch
                                 base.Move(StepDirection.Top);
                             }
                         }
@@ -41,20 +41,19 @@ namespace BotChallenge.CompilerTest
             //        }
             //    ";
 
-            ICompilerProvider compProvider = new CompilerProvider();
+            ILanguageProvider compProvider = new LanguageProvider();
             ICompiler compiler = compProvider.GetCompilerForLanguage(CompilerSupportedLanguages.CSharp);
 
-            List<string> errors = null;
-            bool compileResult = compiler.VerifyCode(TaskParameters.Build(2), out errors, Bot1);
+            CompilationResult compileResult = compiler.VerifyCode(TaskParameters.Build(2), Bot1);
 
-            Console.WriteLine($"Compilation result - { compileResult }");
+            Console.WriteLine($"Compilation result - { compileResult.IsCodeCorrect }");
 
-            if (errors.Count > 0)
+            if (compileResult.Errors.Count > 0)
             {
                 Console.Error.WriteLine("Detected errors");
             }
 
-            foreach (string error in errors)
+            foreach (string error in compileResult.Errors)
             {
                 Console.Error.WriteLine(error);
             }
