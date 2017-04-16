@@ -12,22 +12,28 @@ namespace BotChallenge.Controllers
         public static List<Game> Games { get; set; }
 
         [HttpGet]
-        public ActionResult RegisterForGame()
+        public ActionResult Register()
         {
             return View();
         }
 
 
-        [HttpPost]
-        public ActionResult RegisterForGame(Player p)
-        {
-            return null;
-        }
-
         [NonAction]
         public Game FindFreeGame()
         {
             return null;
+        }
+
+        [HttpGet]
+        public ActionResult Waiting()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Game()
+        {
+            return View();
         }
     }
 }
