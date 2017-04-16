@@ -27,7 +27,7 @@ namespace SignalRMvc.Hubs
             var secondPlayerConnections = Users.Single(u => u.Name == login2).ConnectionIds.ToList();
             firstPlayerConnections.AddRange(secondPlayerConnections);
 
-            Clients.Clients(firstPlayerConnections).goForGame();
+            Clients.Clients(firstPlayerConnections).goForGame(Users.Where(u => u.Name == login1).First().Game);
         }
 
 

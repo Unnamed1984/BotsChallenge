@@ -1,0 +1,79 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game</title>
+    @Styles.Render("~/Content/game")
+
+</head>
+<body>
+    <main class="flex-container">
+        <header class="">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 less-paddings">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="pull-left">Players:</h4>
+                        <div class="pull-right">
+                            <p>Player 1 - working</p>
+                            <p>Player 2 - ready</p>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center less-paddings">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3>Map: Deikstra's algorythm</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                Aim: defeat your enemy.
+                Maybe here will be a minimap.
+            </div>
+        </header>
+        <div id="canva"></div>
+        <footer class="bounded-block">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 less-paddings scrollable-block">
+                <ul class="list-group">
+                    <li class="list-group-item bot-item active" id="botList0">Bot1</li>
+                    <li class="list-group-item bot-item" id="botList1">Bot2</li>
+                    <li class="list-group-item bot-item" id="botList2">Bot3</li>
+                    <li class="list-group-item bot-item" id="botList3">Bot4</li>
+                </ul>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 height-100 less-paddings">
+                <textarea class="form-control height-100" id="code"></textarea>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 panel-group less-paddings scrollable-block">
+                <div class="panel panel-danger">
+                    <div class="panel-heading">
+                        Control panel
+                        <div class="pull-right compile-buttons-block">
+                            <button class="btn btn-primary btn-sm">Compile</button>
+                            <button class="btn btn-primary btn-sm">Run</button>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="panel-body">
+                        <p>Error 404: lorem impsukj lakfj lkja</p>
+                        <p>Error 404: lorem impsukj lakfj lkja</p>
+                        <p>Error 404: lorem impsukj lakfj lkja</p>
+                        <p>Error 404: lorem impsukj lakfj lkja</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    @Scripts.Render("~/bundles/phaser-lib")
+    @Scripts.Render("~/bundles/phaser-modules")
+    @Scripts.Render("~/bundles/phaser-core")
+</body>
+</html>
