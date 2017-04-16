@@ -3,6 +3,9 @@
     Layout = null;
 }
 
+@using BotChallenge.Models
+@model GameState
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,8 +22,10 @@
                     <div class="panel-heading">
                         <h4 class="pull-left">Players:</h4>
                         <div class="pull-right">
-                            <p>Player 1 - working</p>
-                            <p>Player 2 - ready</p>
+                            @foreach (var login in Model.Players)
+                            {
+                                <p>@login - working</p>
+                            }
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -29,23 +34,22 @@
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center less-paddings">
                 <div class="panel panel-success">
                     <div class="panel-heading">
-                        <h3>Map: Deikstra's algorythm</h3>
+                        <h3>Map: @Model.FieldState.MapName</h3>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                Aim: defeat your enemy.
-                Maybe here will be a minimap.
+                Aim: @Model.FieldState.MapDescription
             </div>
         </header>
         <div id="canva"></div>
         <footer class="bounded-block">
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 less-paddings scrollable-block">
                 <ul class="list-group">
-                    <li class="list-group-item bot-item active" id="botList0">Bot1</li>
-                    <li class="list-group-item bot-item" id="botList1">Bot2</li>
-                    <li class="list-group-item bot-item" id="botList2">Bot3</li>
-                    <li class="list-group-item bot-item" id="botList3">Bot4</li>
+                    <li class="list-group-item bot-item active" id=@Model.FieldState.Bots[Model.CurrentLogin].First().Id>@Model.FieldState.Bots[Model.CurrentLogin].First().Name</li>
+                    @for (var i=1; i<@Model.FieldState.Bots[Model.CurrentLogin].Count; i++){
+                        <li class="list-group-item bot-item" id=@Model.FieldState.Bots[Model.CurrentLogin][i].Id>@Model.FieldState.Bots[Model.CurrentLogin][i].Name</li>
+                    }
                 </ul>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 height-100 less-paddings">
@@ -72,6 +76,9 @@
         </footer>
     </main>
 
+    <script>
+        window.model = @Html.Raw(Json.Encode(Model));
+    </script>
     @Scripts.Render("~/bundles/phaser-lib")
     @Scripts.Render("~/bundles/phaser-modules")
     @Scripts.Render("~/bundles/phaser-core")

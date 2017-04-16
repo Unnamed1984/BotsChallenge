@@ -13,6 +13,8 @@ namespace BotChallenge.BLL.Models
         public Game()
         {
             this.Players = new List<Player>();
+            this.Field = new Field();
+            this.Id = Guid.NewGuid().ToString();
         }
 
         private event Action<String, String> FilledGameEvent;

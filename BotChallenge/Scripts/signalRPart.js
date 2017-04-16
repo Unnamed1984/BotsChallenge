@@ -10,13 +10,11 @@
     };
 
     game.client.goForWaiting = function () {
-        console.log('waiting');
         document.getElementById('regForm').remove();
         document.getElementById('waitingForm').classList.remove('display-none');
     };
     
-    game.client.goForGame = function () {
-        console.log('game is on');
+    game.client.goForGame = function (login) {
         var element = document.getElementById('progress');
         element.className += " progress-bar-success";
         element.classList.remove("active");
@@ -24,6 +22,8 @@
         element.textContent = "Ready";
 
         document.getElementById('cancel-btn').className += " display-none";
+        
+        document.cookie = "Login=" + login;
 
         setTimeout(function () {
             location.href = "/Game/Game";
@@ -32,10 +32,10 @@
 
     game.client.logOut = function () {
         sessionStorage.clear();
+        document.cookie = "";
     };
 
     var login = sessionStorage.getItem('botsLogin');
-    console.log(login);
 
     if (login) {
         $.connection.hub.start().done(function () {
@@ -45,10 +45,7 @@
         });
     }
 
-    console.log(document.getElementById('cancel-btn'));
     document.getElementById('cancel-btn').onclick = function () {
-        console.log('cancel');
-        console.log(sessionStorage.getItem('botsLogin'));
         game.server.cancelWaiting(sessionStorage.getItem('botsLogin'));
     };
 
@@ -59,7 +56,6 @@
             var name = document.getElementById('login').value;
 
             sessionStorage.setItem('botsLogin', name);
-            console.log(name);
             game.server.connect(name);
         });
     });

@@ -8,7 +8,17 @@ namespace BotChallenge.BLL.Models
 {
     public class Field
     {
-        public Point[][] Points { get; set; }
-        public List<Bot> Bots { get; set; }
+        public Field()
+        {
+            this.MapDescription = "Defeat all enemies test";
+            this.MapName = "Test field";
+            this.MapPath = "";
+            this.Bots = new Dictionary<string, List<Bot>>();
+        }
+
+        public String MapPath { get; set; }
+        public String MapName { get; set; }
+        public String MapDescription { get; set; }
+        public Dictionary<String, List<Bot>> Bots { get; set; }
     }
 }

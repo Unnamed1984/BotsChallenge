@@ -40,11 +40,12 @@ function onBotDown(sprite, pointer){
 }
 
 function deselectListItem(id){
-    document.getElementById('botList' + id).classList.remove('active');
+    document.getElementById(id).classList.remove('active');
 }
 
 function selectListItem(id){
-    document.getElementById('botList' + id).classList.add('active');
+    document.getElementById(
+        id).classList.add('active');
 }
 
 function saveCode(selectedBot){

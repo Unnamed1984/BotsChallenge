@@ -6,14 +6,12 @@ using Microsoft.AspNet.SignalR;
 using BotChallenge.BLL.Models;
 using BotChallenge.BLL.Logic;
 using System.Collections.Concurrent;
+using BotChallenge.Util;
 
 namespace SignalRMvc.Hubs
 {
     public class GameHub : Hub
     {
-        static List<Player> Users = new List<Player>();
-        static GamePool pool = new GamePool();
-
         //// Переход на страницу ожидания
         //public void WaitingPage(String id)
         //{
@@ -23,11 +21,11 @@ namespace SignalRMvc.Hubs
         // Переход на страницу игры
         public void GoToGamePage(String login1, String login2)
         {
-            var firstPlayerConnections = Users.Single(u => u.Name == login1).ConnectionIds.ToList();
-            var secondPlayerConnections = Users.Single(u => u.Name == login2).ConnectionIds.ToList();
-            firstPlayerConnections.AddRange(secondPlayerConnections);
+            var firstPlayerConnections = GameManager.FindUser(login1).ConnectionIds.ToList();
+            var secondPlayerConnections = GameManager.FindUser(login2).ConnectionIds.ToList();
 
-            Clients.Clients(firstPlayerConnections).goForGame(Users.Where(u => u.Name == login1).First().Game);
+            Clients.Clients(firstPlayerConnections).goForGame(login1);
+            Clients.Clients(secondPlayerConnections).goForGame(login2);
         }
 
 
@@ -36,18 +34,18 @@ namespace SignalRMvc.Hubs
         {
             var id = Context.ConnectionId;
 
-            var p = Users.FirstOrDefault(u => u.Name == userName);
+            var p = GameManager.FindUser(userName);
             if (p == null)
             {
                 Player p1 = new Player { Name = userName };
                 p1.ConnectionIds = new HashSet<string>() { id };
 
-                Users.Add(p1);
+                GameManager.AddUser(p1);
 
                 // Посылаем сообщение текущему пользователю
                 Clients.Caller.goForWaiting();
 
-                Game g = pool.RegisterPlayer(p1);
+                Game g = GameManager.RegisterPlayer(p1);
 
                 g.SubscribeOnThisGame(GoToGamePage);
             }
@@ -55,11 +53,11 @@ namespace SignalRMvc.Hubs
             {
                 if (p.Game.IsReady)
                 {
-                    Clients.Clients(Users.First(u => u.Name == userName).ConnectionIds.ToList()).goForGame();
+                    Clients.Clients(GameManager.FindUser(userName).ConnectionIds.ToList()).goForGame(p.Name);
                 }
                 else
                 {
-                    Clients.Clients(Users.First(u => u.Name == userName).ConnectionIds.ToList()).goForWaiting();
+                    Clients.Clients(GameManager.FindUser(userName).ConnectionIds.ToList()).goForWaiting();
                 }
             }
         }
@@ -67,17 +65,15 @@ namespace SignalRMvc.Hubs
         // Отмена ожидания
         public void CancelWaiting(string userName)
         {
-            var user = Users.Single(u => u.Name == userName);
-            Clients.Clients(user.ConnectionIds.ToList()).logOut();
+            List<String> connectionIds = GameManager.UnregisterUser(userName);
 
-            user.Game.Players.Remove(user);
-            Users.Remove(user);
+            Clients.Clients(connectionIds).logOut();
         }
 
         // Отключение пользователя
         public override System.Threading.Tasks.Task OnDisconnected(bool stopCalled)
         {
-            var item = Users.FirstOrDefault(u => u.ConnectionIds.Contains(Context.ConnectionId));
+            var item = GameManager.FindUserByConnectionId(Context.ConnectionId);
             if (item != null)
             {
                 //if (item.ConnectionIds.Count == 1)

@@ -32,13 +32,13 @@ function initializeBots(map){
         initializeCode(bots[i]);
 
         // Click on list item
-        document.getElementById('botList' + i).onclick = function (e){
+        document.getElementById(bots[i].Id).onclick = function (e){
             // should change it when here is server side
-            var id = e.target.id[e.target.id.length-1];
+            var id = e.target.id;
             var bots = controller.getBots();
 
-            for (var i=0; i<bots.length; i++){
-                if (bots[i].Id == id){
+            for (var i = 0; i < bots.length; i++) {
+                if (bots[i].Id == id) {
                     onBotDown(bots[i].sprite, null);
                 }
             }

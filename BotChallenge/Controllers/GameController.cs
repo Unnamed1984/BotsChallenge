@@ -1,4 +1,6 @@
 ﻿using BotChallenge.BLL.Models;
+using BotChallenge.Models;
+using BotChallenge.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +35,9 @@ namespace BotChallenge.Controllers
         [HttpGet]
         public ActionResult Game()
         {
-            return View();
+            String login = Request.Cookies.Get("Login").Value;
+            GameState gState = GameManager.GetGameStateForPlayer(login);
+            return View(gState);
         }
     }
 }

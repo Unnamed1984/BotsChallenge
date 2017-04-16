@@ -4,8 +4,8 @@
 "use strict"
 
 class Bot{
-    constructor(x, y, id){
-        this.health = 100;
+    constructor(x, y, id, health) {
+        this.health = health;
         this.x = x;
         this.y = y;
         this.sprite = null;

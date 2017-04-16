@@ -13,15 +13,32 @@ class BotsController{
 
     init(width, height){
         // here will be some AJAX methods
-        for (var i=0; i<4; i++){
-            var randX = getRandomInteger(0, width);
-            var randY = getRandomInteger(0, height);
-            this.botsCollection.push(new Bot(randX, randY, i));
+        var model = window.model;
 
-            randX = getRandomInteger(0, width);
-            randY = getRandomInteger(0, height);
-            this.enemyBots.push(new Bot(randX, randY));
+        var bots = model.FieldState.Bots[model.CurrentLogin];
+
+        for (var i = 0; i < bots.length; i++) {
+            this.botsCollection.push(new Bot(bots[i].X, bots[i].Y, bots[i].Id, bots[i].Health));
         }
+
+        delete model.FieldState.Bots[model.CurrentLogin];
+
+        var first;
+        for (var m in model.FieldState.Bots) {
+            if (m) {
+                first = m;
+                break;
+            }
+        }
+
+        var enemyBots = model.FieldState.Bots[first];
+
+        console.log(enemyBots);
+        for (var i=0; i<enemyBots.length; i++){
+            this.enemyBots.push(new Bot(enemyBots[i].X, enemyBots[i].Y, enemyBots[i].Id, enemyBots[i].Health));
+        }
+
+        delete window.model;
     }
     
     getBots(){
