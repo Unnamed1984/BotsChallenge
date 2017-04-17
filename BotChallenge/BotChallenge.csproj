@@ -184,6 +184,7 @@
     </Compile>
     <Compile Include="Hubs\GameHub.cs" />
     <Compile Include="Models\BotModel.cs" />
+    <Compile Include="Models\CompilationResult.cs" />
     <Compile Include="Models\FieldModel.cs" />
     <Compile Include="Models\GameState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -226,8 +227,10 @@
     <Content Include="Scripts\jquery.signalR-2.2.1.min.js" />
     <Content Include="Scripts\lib\phaser.js" />
     <Content Include="Scripts\lib\phaser.min.js" />
+    <Content Include="Scripts\modules\ajax.module.js" />
     <Content Include="Scripts\modules\bots.module.js" />
     <Content Include="Scripts\modules\camera.module.js" />
+    <Content Include="Scripts\modules\compilation.module.js" />
     <Content Include="Scripts\modules\initializing.module.js" />
     <Content Include="Scripts\modules\util.js" />
     <Content Include="Scripts\register.js" />

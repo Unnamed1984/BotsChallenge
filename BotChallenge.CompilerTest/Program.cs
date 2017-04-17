@@ -28,20 +28,21 @@ namespace BotChallenge.CompilerTest
                     }
                 ";
 
-            //string Bot2 = @"
-            //        namespace Bots.Core 
-            //        {
-            //            public class Bot2 : Bot 
-            //            {
-            //                public void Move() 
-            //                {
-            //                    base.Move(StepDirection.Left);
-            //                }
-            //            }
-            //        }
-            //    ";
 
-            ILanguageProvider compProvider = new LanguageProvider();
+    //string Bot2 = @"
+    //        namespace Bots.Core 
+    //        {
+    //            public class Bot2 : Bot 
+    //            {
+    //                public void Move() 
+    //                {
+    //                    base.Move(StepDirection.Left);
+    //                }
+    //            }
+    //        }
+    //    ";
+
+    ILanguageProvider compProvider = new LanguageProvider();
             ICompiler compiler = compProvider.GetCompilerForLanguage(CompilerSupportedLanguages.CSharp);
 
             CompilationResult compileResult = compiler.VerifyCode(TaskParameters.Build(2), Bot1);

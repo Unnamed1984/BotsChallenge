@@ -33,7 +33,9 @@ namespace BotChallenge
             bundles.Add(new ScriptBundle("~/bundles/phaser-modules").Include("~/Scripts/modules/bots.module.js")
                                                                         .Include("~/Scripts/modules/camera.module.js")
                                                                         .Include("~/Scripts/modules/initializing.module.js")
-                                                                        .Include("~/Scripts/modules/util.js"));
+                                                                        .Include("~/Scripts/modules/util.js")
+                                                                        .Include("~/Scripts/modules/ajax.module.js")
+                                                                        .Include("~/Scripts/modules/compilation.module.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/Site.css",

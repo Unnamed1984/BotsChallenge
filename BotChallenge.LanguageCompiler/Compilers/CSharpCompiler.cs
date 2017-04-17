@@ -40,6 +40,7 @@ namespace BotChallenge.Compiler.Compilers
             {
                 compileResult.Errors = compileResult.Errors ?? new List<string>();
                 compileResult.Errors.Add("You haven't declared classes for all required bots. Please add them.");
+                compileResult.IsCodeCorrect = false;
             }
 
             return compileResult;

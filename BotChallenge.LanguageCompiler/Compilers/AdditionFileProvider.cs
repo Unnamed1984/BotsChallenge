@@ -13,7 +13,9 @@ namespace BotChallenge.Compiler.Compilers
         {
             List<string> contents = new List<string>();
 
-            string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LanguageSurround");
+            //string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LanguageSurround");
+
+            string basePath = @"D:\Files\Projects\BotChallenge\BotChallenge.LanguageCompiler\LanguageSurround\";
 
             for (int i = 0; i < paths.Length; i++)
             {

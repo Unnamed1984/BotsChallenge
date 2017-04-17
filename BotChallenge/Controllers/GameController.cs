@@ -1,4 +1,7 @@
-﻿using BotChallenge.BLL.Models;
+﻿using AutoMapper;
+using BotChallenge.BLL.Entities.DTO;
+using BotChallenge.BLL.Logic;
+using BotChallenge.BLL.Models;
 using BotChallenge.Models;
 using BotChallenge.Util;
 using System;
@@ -11,7 +14,18 @@ namespace BotChallenge.Controllers
 {
     public class GameController : Controller
     {
-        public static List<Game> Games { get; set; }
+        private BotsCompiler compiler = new BotsCompiler();
+        private IMapper _mapper;
+
+        public GameController()
+        {
+            MapperConfiguration config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<CompilationResultDTO, CompilationResultModel>();
+            });
+
+            _mapper = config.CreateMapper();
+        }
 
         [HttpGet]
         public ActionResult Register()
@@ -38,6 +52,14 @@ namespace BotChallenge.Controllers
             String login = Request.Cookies.Get("Login").Value;
             GameState gState = GameManager.GetGameStateForPlayer(login);
             return View(gState);
+        }
+
+        [HttpPost]
+        public JsonResult CompileBot(String code)
+        {
+            CompilationResultDTO result =  compiler.Compile(code);
+
+            return Json(_mapper.Map<CompilationResultModel>(result));
         }
     }
 }
