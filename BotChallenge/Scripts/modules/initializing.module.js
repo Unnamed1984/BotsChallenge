@@ -30,6 +30,7 @@ function initializeBots(map){
         sprite.input.useHandCursor = true;
         sprite.events.onInputDown.add(onBotDown);
         initializeCode(bots[i]);
+        initializeErrors(bots[i]);
 
         // Click on list item
         document.getElementById(bots[i].Id).onclick = function (e){
@@ -49,6 +50,7 @@ function initializeBots(map){
     bots[0].sprite.animations.play('selected');
     controller.selectedBot.content = bots[0];
     displayCode(bots[0]);
+    displayErrorsState(bots[0]);
 
     // Enemy bots
     var enemyBots = controller.getEnemyBots();
@@ -65,5 +67,15 @@ function initializeCode(bot){
 
     if (typeof code != 'undefined'){
         bot.Code = code;
+    }
+}
+
+function initializeErrors(bot){
+    var isCorrect = localStorage.getItem('bot_isCodeCorrect' + bot.Id, bot.Code);
+    var errors = localStorage.getItem('bot_errors' + bot.Id);
+
+    if (errors != undefined) {
+        bot.isCorrect = isCorrect;
+        bot.errors = JSON.parse(errors);
     }
 }

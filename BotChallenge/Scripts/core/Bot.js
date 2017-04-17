@@ -4,13 +4,16 @@
 "use strict"
 
 class Bot{
-    constructor(x, y, id, health) {
+    constructor(x, y, id, health, name) {
         this.health = health;
         this.x = x;
         this.y = y;
         this.sprite = null;
         this.id = id;
         this.code = '';
+        this.isCodeCorrect = undefined;
+        this.errors = [];
+        this.name = name;
     }
 
     get X(){
@@ -40,6 +43,34 @@ class Bot{
     set Code(value){
         this.code = value;
     }
+
+    get IsCodeCorrect(){
+        return this.isCodeCorrect;
+    }
+
+    set IsCodeCorrect(value) {
+        this.isCodeCorrect = value;
+    }
+
+    get Errors(){
+        return this.errors;
+    }
+
+    set Errors(value) {
+        this.errors = value;
+    }
+
+    get Name() {
+        return this.name;
+    }
+
+    set Name(value) {
+        this.name = value;
+    }
+
+
+
+
 
     // set Id(value){
     //     this.Id = value;

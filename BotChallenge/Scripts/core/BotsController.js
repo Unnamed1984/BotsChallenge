@@ -18,7 +18,7 @@ class BotsController{
         var bots = model.FieldState.Bots[model.CurrentLogin];
 
         for (var i = 0; i < bots.length; i++) {
-            this.botsCollection.push(new Bot(bots[i].X, bots[i].Y, bots[i].Id, bots[i].Health));
+            this.botsCollection.push(new Bot(bots[i].X, bots[i].Y, bots[i].Id, bots[i].Health, bots[i].Name));
         }
 
         delete model.FieldState.Bots[model.CurrentLogin];

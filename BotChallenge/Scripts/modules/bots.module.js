@@ -22,6 +22,7 @@ function onBotDown(sprite, pointer){
         if (bots[i].sprite.renderOrderID == sprite.renderOrderID){
             selectedBot.content = bots[i];
             displayCode(selectedBot.content);
+            displayErrorsState(selectedBot.content);
         }
     }
 
@@ -57,3 +58,29 @@ function saveCode(selectedBot){
 function displayCode(selectedBot){
     document.getElementById('code').value = selectedBot.Code;
 }
+
+function saveErrorsState(selectedBot) {
+    localStorage.setItem('bot_isCodeCorrect' + selectedBot.content.Id, selectedBot.content.IsCodeCorrect);
+    localStorage.setItem('bot_errors' + selectedBot.content.Id, JSON.stringify(selectedBot.content.Errors));
+}
+
+function displayErrorsState(selectedBot) {
+    var isCorrect = localStorage.getItem('bot_isCodeCorrect' + selectedBot.Id);
+    var errors = JSON.parse(localStorage.getItem('bot_errors' + selectedBot.Id));
+
+    switch (isCorrect) {
+        case null:
+            setCodeAsDefault();
+            highLightPanelAsDefault();
+            break;
+        case 'false':
+            setCodeAsIncorrect(errors);
+            highLightPanelAsIncorrect(errors);
+            break;
+        case 'true':
+            setCodeAsCorrect();
+            highLightPanelAsCorrect();
+            break;
+    }
+}
+
