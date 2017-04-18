@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{61F5497F-5130-43A3-ADA9-EF4677FD1886}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{44D47DFA-7434-4FAA-9183-BD722BBBC521}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BotChallenge.CompilerTest</RootNamespace>
-    <AssemblyName>BotChallenge.CompilerTest</AssemblyName>
+    <RootNamespace>BotChallenge.Runner</RootNamespace>
+    <AssemblyName>BotChallenge.Runner</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,20 +40,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="CodeRunners\CSharpRunner.cs" />
+    <Compile Include="CodeRunners\IRunner.cs" />
+    <Compile Include="CodeRunners\Models\Field.cs" />
+    <Compile Include="Exceptions\UnSupportedLanguageException.cs" />
+    <Compile Include="LanguageProviders\RunnerSupportedLanguages.cs" />
+    <Compile Include="LanguageProviders\IRunnerProvider.cs" />
+    <Compile Include="LanguageProviders\RunnerProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BotChallenge.LanguageCompiler\BotChallenge.Compiler.csproj">
       <Project>{a7cba876-442a-4673-b40e-bb537a44b583}</Project>
       <Name>BotChallenge.Compiler</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BotChallenge.Runner\BotChallenge.Runner.csproj">
-      <Project>{44d47dfa-7434-4faa-9183-bd722bbbc521}</Project>
-      <Name>BotChallenge.Runner</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

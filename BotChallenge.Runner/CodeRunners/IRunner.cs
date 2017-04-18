@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BotChallenge.Compiler.Compilers.Models;
-using BotChallenge.Compiler.CodeRunners.Models;
+using BotChallenge.Runner.CodeRunners.Models;
 
-namespace BotChallenge.Compiler.CodeRunners
+namespace BotChallenge.Runner.CodeRunners
 {
     public interface IRunner
     {

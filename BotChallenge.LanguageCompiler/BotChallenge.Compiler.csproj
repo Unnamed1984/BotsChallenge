@@ -40,9 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeRunners\CSharpRunner.cs" />
-    <Compile Include="CodeRunners\IRunner.cs" />
-    <Compile Include="CodeRunners\Models\Field.cs" />
     <Compile Include="LanguageProviders\LanguageProvider.cs" />
     <Compile Include="LanguageProviders\CompilerSupportedLanguages.cs" />
     <Compile Include="Compilers\AdditionFileProvider.cs" />

@@ -79,6 +79,8 @@ namespace BotChallenge.Compiler.Compilers
             }
 
             returnResult.IsCodeCorrect = true;
+            returnResult.Errors = new List<string>();
+
             return returnResult;
         }
 
