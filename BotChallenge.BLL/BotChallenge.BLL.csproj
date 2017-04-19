@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=6.0.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.0.2\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,9 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Bot.cs" />
+    <Compile Include="Entities\DTO\CompilationResultDTO.cs" />
     <Compile Include="Entities\Enums\PointType.cs" />
     <Compile Include="Entities\Field.cs" />
     <Compile Include="Entities\Game.cs" />
+    <Compile Include="Logic\BotsCompiler.cs" />
     <Compile Include="Logic\GamePool.cs" />
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Entities\Point.cs" />
@@ -55,6 +61,9 @@
       <Project>{a7cba876-442a-4673-b40e-bb537a44b583}</Project>
       <Name>BotChallenge.Compiler</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

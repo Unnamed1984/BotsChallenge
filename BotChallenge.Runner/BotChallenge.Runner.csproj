@@ -42,7 +42,16 @@
   <ItemGroup>
     <Compile Include="CodeRunners\CSharpRunner.cs" />
     <Compile Include="CodeRunners\IRunner.cs" />
+    <Compile Include="CodeRunners\Lib\BotJournalEventArgs.cs" />
+    <Compile Include="CodeRunners\Lib\BotJournalFileWatcher.cs" />
+    <Compile Include="CodeRunners\Lib\MapWorker.cs" />
     <Compile Include="CodeRunners\Models\Field.cs" />
+    <Compile Include="CodeRunners\Models\GameActions\ActionHandlersProvider.cs" />
+    <Compile Include="CodeRunners\Models\GameActions\GameAction.cs" />
+    <Compile Include="CodeRunners\Models\GameActions\IActionHandler.cs" />
+    <Compile Include="CodeRunners\Models\GameActions\MoveActionHandler.cs" />
+    <Compile Include="CodeRunners\Models\GameActions\ShootActionHandler.cs" />
+    <Compile Include="CodeRunners\Models\GameCommand.cs" />
     <Compile Include="Exceptions\UnSupportedLanguageException.cs" />
     <Compile Include="LanguageProviders\RunnerSupportedLanguages.cs" />
     <Compile Include="LanguageProviders\IRunnerProvider.cs" />
@@ -55,6 +64,7 @@
       <Name>BotChallenge.Compiler</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

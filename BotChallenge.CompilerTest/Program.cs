@@ -47,7 +47,7 @@ namespace BotChallenge.CompilerTest
             ILanguageProvider compProvider = new LanguageProvider();
             ICompiler compiler = compProvider.GetCompilerForLanguage(CompilerSupportedLanguages.CSharp);
 
-            CompilationResult compileResult1 = compiler.VerifyCode(TaskParameters.Build(2), Bot1, Bot2);
+            CompilationResult compileResult1 = compiler.CompileCode(TaskParameters.Build(2), Bot1, Bot2);
 
             Console.WriteLine($"Compilation result - { compileResult1.IsCodeCorrect }");
 
@@ -61,12 +61,15 @@ namespace BotChallenge.CompilerTest
                 Console.Error.WriteLine(error);
             }
 
-            CompilationResult compileResult2 = compiler.VerifyCode(TaskParameters.Build(2), Bot2, Bot1);
+            CompilationResult compileResult2 = compiler.CompileCode(TaskParameters.Build(2), Bot2, Bot1);
 
             IRunnerProvider runProvider = new RunnerProvider();
             IRunner runner = runProvider.GetRunnerForLanguage(RunnerSupportedLanguages.CSharp);
 
             Field field = generateField(15, 15);
+
+            compileResult1.InformationForCodeRunner.PlayerName = "player1";
+            compileResult2.InformationForCodeRunner.PlayerName = "player2";
 
             runner.RunCodeGame(compileResult1.InformationForCodeRunner, compileResult2.InformationForCodeRunner, field);
             Console.ReadKey();

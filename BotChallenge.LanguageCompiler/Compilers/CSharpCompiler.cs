@@ -14,7 +14,7 @@ namespace BotChallenge.Compiler.Compilers
 {
     class CSharpCompiler : ICompiler
     {
-        public CompilationResult VerifyCode(TaskParameters task, params string[] codeClasses)
+        public CompilationResult CompileCode(TaskParameters task, params string[] codeClasses)
         {
             string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CompilerTempFiles", Guid.NewGuid().ToString() + ".exe");
 
@@ -40,8 +40,28 @@ namespace BotChallenge.Compiler.Compilers
             {
                 compileResult.Errors = compileResult.Errors ?? new List<string>();
                 compileResult.Errors.Add("You haven't declared classes for all required bots. Please add them.");
+                compileResult.IsCodeCorrect = false;
             }
 
+            return compileResult;
+        }
+
+        public CompilationResult VerifyBotCode(string code)
+        {
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CompilerTempFiles", Guid.NewGuid().ToString() + ".exe");
+
+            // verife that such file doesn't exists.
+            lock (GetType())
+            {
+                while (File.Exists(path))
+                {
+                    path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CompilerTempFiles", Guid.NewGuid().ToString() + ".exe");
+                }
+            }
+
+            CompilationResult compileResult = this.compileCodeClasses(path, this.extendBotCodeWithCoreClasses(new string[] { code }));
+
+            File.Delete(path);
             return compileResult;
         }
 
@@ -58,7 +78,6 @@ namespace BotChallenge.Compiler.Compilers
 
         private CompilationResult compileCodeClasses(string pathToAssembly, string[] codeClasses)
         {
-
             CSharpCodeProvider cscp = new CSharpCodeProvider(new Dictionary<string, string>()
             { { "CompilerVersion", "v4.0" } });
 

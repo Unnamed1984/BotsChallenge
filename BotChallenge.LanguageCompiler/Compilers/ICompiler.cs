@@ -10,6 +10,7 @@ namespace BotChallenge.Compiler
 {
     public interface ICompiler
     {
-        CompilationResult VerifyCode(TaskParameters task, params string[] codeClasses);
+        CompilationResult CompileCode(TaskParameters task, params string[] codeClasses);
+        CompilationResult VerifyBotCode(string code);
     }
 }

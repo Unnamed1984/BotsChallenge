@@ -19,6 +19,7 @@ namespace BotChallenge.Runner.CodeRunners.Models
 
     public enum Point
     {
+        Empty,
         RedBot,
         BlueBot, 
         Obstacle

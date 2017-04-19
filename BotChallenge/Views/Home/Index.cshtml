@@ -1,31 +1,39 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    Layout = null;
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    @Styles.Render("~/Content/css")
+</head>
+<body class="flex-align-baseline">
+    <form role="form" id="regForm" class="row center-form center-form-margin-top">
+        <input type="text" placeholder="Enter your name" class="form-control wide-input" id="login" required />
+        <button class="btn btn-primary btn-margin-top" type="submit">Start game</button>
+    </form>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    <form id="waitingForm" class="center-form center-form-margin-top display-none">
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped active progress-bar-zero" role="progressbar"
+                 aria-valuenow="100" aria-valuemin="100" aria-valuemax="100" id="progress">
+                Waiting for another player...
+            </div>
+        </div>
+        <button class="btn btn-danger btn-center btn-sm" id="cancel-btn">Cancel</button>
+    </form>
+
+    <div id="game" class="display-none">
+        <h2>Game is on...</h2>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <!--Ссылка на библиотеку SignalR -->
+    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
+    <!--Ссылка на автоматически сгенерированный скрипт хаба SignalR -->
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/signalRPart.js"></script>
+</body>
+</html>
