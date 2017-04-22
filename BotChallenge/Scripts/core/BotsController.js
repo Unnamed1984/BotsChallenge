@@ -8,6 +8,7 @@ class BotsController{
         this.botsCollection = [];
         this.enemyBots = [];
         this.selectedBot = { content: null };
+        this.gameState = null;
         this.init(width, height);
     }
 
@@ -51,5 +52,13 @@ class BotsController{
 
     getSelectedBot(){
         return this.selectedBot;
+    }
+
+    getGameState() {
+        return this.gameState;
+    }
+
+    setGameState(state) {
+        this.gameState = state;
     }
 }

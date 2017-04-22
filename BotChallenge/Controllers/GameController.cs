@@ -63,9 +63,9 @@ namespace BotChallenge.Controllers
         }
 
         [HttpPost]
-        public JsonResult CompileBots(String[] code, int botsCount)
+        public JsonResult CompileBots(RunBotsModel model)
         {
-            CompilationResultDTO result = compiler.CompileBotsCode(code, botsCount);
+            CompilationResultDTO result = compiler.CompileBotsCode(model.Code, model.BotsCount);
 			
             return Json(_mapper.Map<CompilationResultModel>(result));
         }

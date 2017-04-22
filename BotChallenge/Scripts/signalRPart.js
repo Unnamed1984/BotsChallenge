@@ -1,6 +1,6 @@
 ﻿$(function () {
     // Ссылка на автоматически-сгенерированный прокси хаба
-    var game = $.connection.gameHub;
+    var game = $.connection.registrationHub;
 
     // Функция, вызываемая при подключении нового пользователя
     game.client.onConnected = function (id, userName, allUsers) {

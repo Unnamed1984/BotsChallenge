@@ -15,7 +15,11 @@ function focusCameraOnSprite(sprite){
     game.camera.focusOn(sprite);
 }
 
-function cameraController(){
+function cameraController() {
+    if (controller.getGameState() == "ready") {
+        return;
+    }
+
     if (cursors.left.isDown)
     {
         moveCamera(-5, 0);

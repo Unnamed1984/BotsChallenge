@@ -19,17 +19,14 @@ header{
 
 #canva{
      max-width: 100% !important;
-     max-height: 68%;
+     max-height: 90%;
      height: 68%;
      overflow: auto;
  }
 
 /* should be bigger */
 .big-canva{
-    max-width: 100% !important;
-    max-height: 68%;
-    height: 68%;
-    overflow: auto;
+    height: 90% !important;
 }
 
 textarea{
@@ -87,4 +84,8 @@ canvas{
 
 .panel{
     margin-bottom: 5px !important;
+}
+
+.display-none{
+    display: none !important;
 }

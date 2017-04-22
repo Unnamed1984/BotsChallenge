@@ -26,6 +26,43 @@ document.getElementById('compilationBtn').onclick = function () {
     }
 }
 
+document.getElementById('runBtn').onclick = function () {
+    hideUI();
+    //var selected = controller.getSelectedBot();
+    //saveCode(selected);
+
+    //var code = [];
+   
+    //var bots = controller.getBots();
+    //for (var i = 0; i < bots.length; i++) {
+    //    code.push(bots[i].Code);
+    //}
+
+    //console.log(code);
+    //console.log(bots.length);
+    //var request = sendPost("/Game/CompileBots", { Code: code, BotsCount: bots.length });
+    //request.onreadystatechange = function () { // (3)
+    //    if (request.readyState != 4) return;
+
+    //    if (request.status != 200) {
+    //        alert(request.status + ': ' + request.statusText);
+    //    } else {
+    //        var result = JSON.parse(request.responseText);
+    //        if (result.IsCodeCorrect) {
+    //            setCodeAsCorrect();
+    //            highLightPanelAsCorrect();
+    setReady();
+    //        } else {
+    //            setCodeAsIncorrect(result.Errors);
+    //            highLightPanelAsIncorrect(result.Errors);
+    //        }
+
+    //        saveErrorsState(controller.getSelectedBot());
+    //    }
+
+    //}
+}
+
 function clearErrors() {
     var container = document.getElementById('errors');
 

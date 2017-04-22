@@ -35,7 +35,12 @@ namespace BotChallenge
                                                                         .Include("~/Scripts/modules/initializing.module.js")
                                                                         .Include("~/Scripts/modules/util.js")
                                                                         .Include("~/Scripts/modules/ajax.module.js")
-                                                                        .Include("~/Scripts/modules/compilation.module.js"));
+                                                                        .Include("~/Scripts/modules/compilation.module.js")
+                                                                        .Include("~/Scripts/modules/run.module.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/signalRGame").Include("~/Scripts/jquery.signalR-2.2.1.min.js")
+                                                                    .Include("~/signalr/hubs")
+                                                                    .Include("~/Scripts/signalRGame.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/Site.css",
