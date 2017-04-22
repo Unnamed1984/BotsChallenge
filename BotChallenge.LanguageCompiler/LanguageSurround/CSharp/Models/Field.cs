@@ -1,5 +1,4 @@
-﻿
-namespace BotChallenge.Runner.CodeRunners.Models
+﻿namespace Bots.Models
 {
     public class Field
     {

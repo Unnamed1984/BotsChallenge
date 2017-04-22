@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using BotChallenge.Compiler.Compilers.Models;
 using BotChallenge.Runner.CodeRunners.Models;
+using BotChallenge.Runner.CodeRunners.Models.GameActions;
 using System.IO;
 using BotChallenge.Runner.CodeRunners.Lib;
+using System.Diagnostics;
 
 namespace BotChallenge.Runner.CodeRunners
 {
@@ -23,26 +25,70 @@ namespace BotChallenge.Runner.CodeRunners
 
             string fileName = generateUniqueFileName(dirPath);
 
-            using (FileStream fs = new FileStream(Path.Combine(dirPath, fileName), FileMode.Create))
+            using (FileStream fs = new FileStream(Path.Combine(dirPath, fileName), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             {
-                MapWorker.WriteFieldToFile(fs, field);
+                BotJournalFileHelper.WriteFieldToFile(fs, field);
 
                 StreamWriter sw = new StreamWriter(fs);
                 sw.Write($" { csRunInfo1.PlayerName } ;");
                 sw.Flush();
 
-                FileSystemWatcher watcher = new FileSystemWatcher(Path.Combine(dirPath, fileName));
-                watcher.Changed += (sender, e) =>
-                {
-                    StreamReader sr = new StreamReader(new FileStream(e.FullPath, FileMode.Open));
+                BotJournalFileWatcher botFileWatcher = new BotJournalFileWatcher(dirPath, fileName);
 
-                    string lastLine = sr.ReadToEnd().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Last();
-                    Console.WriteLine($"Runner last line '{ lastLine }' ");
+                Process player1Process = null, player2Process = null;
+
+                botFileWatcher.CommandEdited += (sender, e) =>
+                {
+                    GameCommand command = e.NewCommand;
+
+                    if (command.BotId == null)
+                    {
+                        return;
+                    }
+
+                    IActionHandler actionHandler = ActionHandlersProvider.GetActionHandler(command.ActionType);
+                    Field newField = actionHandler.ApplyStep(command.StepParams, field);
+
+                    if (!newField.Equals(field))
+                    {
+                        field = newField;
+                        fs.Position = 0;
+                        BotJournalFileHelper.WriteFieldToFile(fs, field);
+                    }
+
+                    fs.Position = fs.Length;
+
+                    if (command.PlayerName == player1Info.PlayerName)
+                    {
+                        sw.Write(player2Info.PlayerName);
+                    }
+                    else
+                    {
+                        sw.Write(player1Info.PlayerName);
+                    }
+                    sw.Flush();
+
+                    if (botFileWatcher.CommandCount > 10)
+                    {
+                        raiseFinishGameEvent(Path.Combine(dirPath, fileName));
+
+                        player1Process.Kill();
+                        player2Process.Kill();
+
+                        botFileWatcher.Dispose();
+                    }
+
                 };
+
+                player1Process = Process.Start(csRunInfo1.PathToExecutable, $" { dirPath } { fileName } { csRunInfo1.PlayerName }");
+                player2Process = Process.Start(csRunInfo2.PathToExecutable, $" { dirPath } { fileName } { csRunInfo2.PlayerName }");
+
             }
-                       
+
             return string.Empty;
         }
+
+        public event EventHandler<GameFinishedEventArgs> GameFinished;
 
         private void verifyRunParameters(CSharpRunnerInformation csRunInfo1, CSharpRunnerInformation csRunInfo2)
         {
@@ -71,6 +117,43 @@ namespace BotChallenge.Runner.CodeRunners
             }
 
             return fileName;
+        }
+
+        private void raiseFinishGameEvent(string filePath)
+        {
+            FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+
+            this.moveToCommandsPart(ref fs);
+
+            StreamReader sr = new StreamReader(fs);
+
+            List<GameCommand> commands = new List<GameCommand>();
+
+            while (!sr.EndOfStream)
+            {
+                commands.Add(BotJournalFileHelper.ParseGameCommand(sr.ReadLine()));
+            }
+
+            fs.Dispose();
+
+            // TODO: detect winner basing on last field state
+            GameFinished?.Invoke(this, new GameFinishedEventArgs(null, commands));
+        }
+
+        private void moveToCommandsPart(ref FileStream s)
+        {
+            StreamReader sr = new StreamReader(s);
+
+            string firstLine = sr.ReadLine();
+
+            string[] splittedBySemicolon = firstLine.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            int height = int.Parse(splittedBySemicolon[1]);
+
+            // reading all field lines
+            for (int i = 0; i < height; i++)
+            {
+                sr.ReadLine();
+            }
         }
     }
 }

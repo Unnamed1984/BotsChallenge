@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BotChallenge.Compiler.LanguageProviders;
 using BotChallenge.Compiler;
 using BotChallenge.Compiler.Compilers;
@@ -19,26 +15,30 @@ namespace BotChallenge.CompilerTest
         {
 
             string Bot1 = @"
+                    using Bots.Models.Steps;
+                    using Bots.Models;
                     namespace Bots.Core 
                     {
                         public class Bot1 : Bot 
                         {
-                            public void Move() 
+                            public override Step NextStep(Field f) 
                             {
-                                base.Move(StepDirection.Top);
+                                return new MoveStep(this, this.X + 1, this.Y);
                             }
                         }
                     }
                 ";
 
             string Bot2 = @"
+                    using Bots.Models.Steps;
+                    using Bots.Models;
                     namespace Bots.Core 
                     {
                         public class Bot2 : Bot 
                         {
-                            public void Move() 
+                            public override Step NextStep(Field f) 
                             {
-                                base.Move(StepDirection.Left);
+                                return new MoveStep(this, this.X, this.Y + 1);
                             }
                         }
                     }

@@ -1,6 +1,4 @@
-﻿using BotChallenge.Runner.CodeRunners.Models.GameActions;
-
-namespace BotChallenge.Runner.CodeRunners.Models
+﻿namespace Bots.Models
 {
     public class GameCommand
     {

@@ -2,10 +2,9 @@
 using System.Linq;
 using System.Text;
 using System.IO;
-using BotChallenge.Runner.CodeRunners.Models;
-using BotChallenge.Runner.CodeRunners.Models.GameActions;
+using Bots.Models;
 
-namespace BotChallenge.Runner.CodeRunners.Lib
+namespace Bots.Lib
 {
     internal class BotJournalFileWatcher : IDisposable
     {
@@ -37,7 +36,7 @@ namespace BotChallenge.Runner.CodeRunners.Lib
 
         internal BotJournalFileWatcher(string directory, string fileName)
         {
-            using (FileStream fs = new FileStream(Path.Combine(directory, fileName), FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
+            using (FileStream fs = new FileStream(Path.Combine(directory, fileName), FileMode.OpenOrCreate, FileAccess.Read))
             {
                 field = BotJournalFileHelper.ReadFieldFromStream(fs);
             }
@@ -79,13 +78,20 @@ namespace BotChallenge.Runner.CodeRunners.Lib
                 {
                     field = BotJournalFileHelper.ReadFieldFromStream(ms);
                 }
-                FieldEdited?.Invoke(this, new FieldChangedEventArgs(this.field, field));
+                if (FieldEdited != null)
+                {
+                    FieldEdited.Invoke(this, new FieldChangedEventArgs(this.field, field));
+                }
             }
             else
             {
                 GameCommand command = BotJournalFileHelper.ParseGameCommand(lines.Last());
 
-                CommandEdited?.Invoke(this, new CommandChangedEventArgs(this.command, command));
+                if (CommandEdited != null)
+                {
+                    CommandEdited.Invoke(this, new CommandChangedEventArgs(this.command, command));
+                }
+
                 this.command = command;
                 lastLine = lines.Last();
             }

@@ -61,5 +61,13 @@ namespace BotChallenge.Controllers
 
             return Json(_mapper.Map<CompilationResultModel>(result));
         }
+
+        [HttpPost]
+        public JsonResult CompileBots(String[] code, int botsCount)
+        {
+            CompilationResultDTO result = compiler.CompileBotsCode(code, botsCount);
+
+            return Json(_mapper.Map<CompilationResultModel>(result));
+        }
     }
 }

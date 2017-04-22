@@ -16,7 +16,7 @@ namespace BotChallenge.Compiler.Compilers
             //string curDir = Environment.CurrentDirectory;
             //string basePath = Path.Combine(curDir, "LanguageSurround");
 
-            string basePath = @"D:\Projects\C#\BotsChallenge\Server\BotChallenge\bin\LanguageSurround";
+            string basePath = @"D:\Projects\C#\BotsChallenge\Server\BotChallenge.CompilerTest\bin\Debug\LanguageSurround";
 
             for (int i = 0; i < paths.Length; i++)
             {
