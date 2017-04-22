@@ -67,7 +67,21 @@ namespace BotChallenge.Compiler.Compilers
 
         private string[] extendBotCodeWithCoreClasses(string[] botCodeClasses)
         {
-            string[] coreFileContents = AdditionFileProvider.LoadFiles(Path.Combine("CSharp", "BotCodeFile.cs"), Path.Combine("CSharp", "ProgramCodeFile.cs"));
+            string[] coreFileContents = AdditionFileProvider.LoadFiles(
+                Path.Combine("CSharp", "Models", "Direction.cs"),
+                Path.Combine("CSharp", "Models", "Field.cs"),
+                Path.Combine("CSharp", "Models", "GameAction.cs"),
+                Path.Combine("CSharp", "Models", "GameCommand.cs"),
+                Path.Combine("CSharp", "Models", "Step.cs"),
+                Path.Combine("CSharp", "BotCodeFile.cs"),
+                Path.Combine("CSharp", "Models", "Steps", "MoveStep.cs"),
+                Path.Combine("CSharp", "Models", "Steps", "ShootStep.cs"),
+                Path.Combine("CSharp", "Lib", "BotJournalFileHelper.cs"),
+                Path.Combine("CSharp", "Lib", "BotJournalFileWatcher.cs"),
+                Path.Combine("CSharp", "Lib", "CommandChangedEventArgs.cs"),
+                Path.Combine("CSharp", "Lib", "FieldChangedEventArgs.cs"),
+                Path.Combine("CSharp", "ProgramCodeFile.cs")
+                );
 
             List<string> allClassContents = new List<string>();
             allClassContents.AddRange(coreFileContents);
@@ -81,8 +95,9 @@ namespace BotChallenge.Compiler.Compilers
             CSharpCodeProvider cscp = new CSharpCodeProvider(new Dictionary<string, string>()
             { { "CompilerVersion", "v4.0" } });
 
-            CompilerParameters parameters = new CompilerParameters(new[] { "mscorlib.dll", "System.Core.dll" }, pathToAssembly);
+            CompilerParameters parameters = new CompilerParameters(new[] { "mscorlib.dll", "System.dll", "System.Core.dll" }, pathToAssembly);
             parameters.GenerateExecutable = true;
+            parameters.TempFiles.KeepFiles = true;
 
             CompilerResults compilationResults = cscp.CompileAssemblyFromSource(parameters, codeClasses);
 
@@ -91,7 +106,7 @@ namespace BotChallenge.Compiler.Compilers
 
             if (compilationResults.Errors.HasErrors)
             {
-                returnResult.Errors = new List<string>(compilationResults.Errors.Cast<CompilerError>().Select(ce => $"Compiler error: { ce.Line } line { ce.Column } column -> { ce.ErrorText }"));
+                returnResult.Errors = new List<string>(compilationResults.Errors.Cast<CompilerError>().Select(ce => $"Compiler error: { ce.Line } line { ce.Column } column -> { ce.ErrorText } , FileContent - { File.ReadAllText(ce.FileName) }"));
                 returnResult.IsCodeCorrect = false;
 
                 return returnResult;
@@ -114,7 +129,7 @@ namespace BotChallenge.Compiler.Compilers
 
             foreach (Type t in types)
             {
-                if (exp.IsMatch(t.FullName) && t.GetMethods().FirstOrDefault(m => m.Name == "Move") != null)
+                if (exp.IsMatch(t.FullName) && t.GetMethods().FirstOrDefault(m => m.Name == "NextStep") != null)
                 {
                     botCount++;
                 }

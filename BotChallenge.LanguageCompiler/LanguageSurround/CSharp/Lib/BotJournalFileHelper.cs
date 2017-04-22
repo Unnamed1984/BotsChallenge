@@ -2,19 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using BotChallenge.Runner.CodeRunners.Models;
+using Bots.Models;
 
-namespace BotChallenge.Runner.CodeRunners.Lib
+namespace Bots.Lib
 {
-    internal static class MapWorker
+    internal static class BotJournalFileHelper
     {
         public static void WriteFieldToFile(Stream stream, Field field)
         {
             StreamWriter sw = new StreamWriter(stream, Encoding.Default);
 
-            sw.WriteLine($" { field.Width } ; { field.Height } ;");
+            sw.WriteLine(String.Format(" { 0 } ; { 1 } ;", field.Width, field.Height ));
 
             StringBuilder fieldLine = new StringBuilder();
 
@@ -63,6 +62,38 @@ namespace BotChallenge.Runner.CodeRunners.Lib
             }
 
             return new Field(width, height, points);
+        }
+
+        /// <summary>
+        /// Process each line of commands part of boitJournal file. 
+        /// Each next command line should be -> 'PlayerName BotId ActionType [ action parameters ] '
+        /// </summary>
+        /// <param name="line"> line to process </param>
+        public static GameCommand ParseGameCommand(string line)
+        {
+            string[] lineParts = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+            // just player name in bot file
+            if (lineParts.Length == 1)
+            {
+                return new GameCommand()
+                {
+                    PlayerName = lineParts[0]
+                };
+            }
+
+            if (lineParts.Length < 3)
+            {
+                throw new ArgumentException("According to .botJournal specification there must be minimum 3 values separated by semicolon in each command line. That should be -> PlayerName, BotId, ActionType. Further can be specified action parameters.");
+            }
+
+            return new GameCommand()
+            {
+                PlayerName = lineParts[0],
+                BotId = lineParts[1],
+                ActionType = (GameAction)Enum.Parse(typeof(GameAction), lineParts[2]),
+                StepParams = lineParts.Skip(3).ToArray()
+            };
         }
 
     }

@@ -85,8 +85,8 @@ namespace BotChallenge.Runner.CodeRunners.Models.GameActions
     enum ShootDirection
     {
         Top, 
-        Right, 
+        Left, 
         Bottom, 
-        Left
+        Right
     }
 }

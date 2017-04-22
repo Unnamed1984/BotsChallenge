@@ -8,7 +8,7 @@ namespace BotChallenge.Runner.CodeRunners.Models.GameActions
 {
     static class ActionHandlersProvider
     {
-        static IActionHandler GetActionHandler(GameAction action)
+        internal static IActionHandler GetActionHandler(GameAction action)
         {
             if (action == GameAction.Move)
             {

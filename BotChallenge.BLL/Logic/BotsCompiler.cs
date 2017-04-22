@@ -48,11 +48,12 @@ namespace BotChallenge.BLL.Logic
             return _mapper.Map<CompilationResultDTO>(res);            
         }
 
-        public CompilationResultDTO CompileAll(String code)
+        public CompilationResultDTO CompileBotsCode(string[] code, int botsCount)
         {
             this.ConfigureMapper();
 
-            CompilationResult res = compiler.CompileCode(null, code);
+            CompilationResult res = compiler.CompileCode(TaskParameters.Build(botsCount), code);
+
             return _mapper.Map<CompilationResultDTO>(res);
         }
     }
