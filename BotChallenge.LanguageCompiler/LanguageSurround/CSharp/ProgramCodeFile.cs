@@ -6,6 +6,7 @@ using Bots.Core;
 using Bots.Models;
 using Bots.Lib;
 using System.IO;
+using System.Text;
 
 namespace Bots.Run
 {
@@ -31,41 +32,73 @@ namespace Bots.Run
             string playerName = args[2];
             Field f = null;
 
-            using (FileStream fs = new FileStream(Path.Combine(dirPath, fileName), FileMode.Open, FileAccess.Read))
+            Console.WriteLine("Before reading field");
+
+            using (FileStream fs = new FileStream(Path.Combine(dirPath, fileName), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 f = BotJournalFileHelper.ReadFieldFromStream(fs);
-
-                StreamReader sr = new StreamReader(fs);
-
-
             }
 
+            Console.WriteLine("After reading field");
+
             BotJournalFileWatcher watcher = new BotJournalFileWatcher(dirPath, fileName);
+
+            Console.WriteLine("Adding handlers");
 
             watcher.FieldEdited += (sender, e) => f = e.NewField;
             watcher.CommandEdited += (sender, e) => 
             {
                 GameCommand command = e.NewCommand;
-                if (!command.PlayerName.Equals(playerName) || command.BotId != null)
+                global::System.Console.WriteLine("Game command playerName - " + command.PlayerName);
+                if (!command.PlayerName.Trim().Equals(playerName) || command.BotId != null)
                 {
                     return;
                 }
 
                 string[] stepArr = makeStep(bots, f);
 
-                using (FileStream fs = new FileStream(Path.Combine(dirPath, fileName), FileMode.Append, FileAccess.Read))
+                using (FileStream fs = new FileStream(Path.Combine(dirPath, fileName), FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
                 {
-                    StreamWriter sw = new StreamWriter(fs);
-
-                    foreach (string param in stepArr)
-                    {
-                        sw.Write(String.Format(" {0} ;", param));
-                    }
-
-                    sw.Flush();
-
+                    writeCommandParams(fs, stepArr);
                 }
             };
+
+            Console.WriteLine("Handlers added");
+
+            string lastLine = null;
+
+            using (FileStream fs = new FileStream(Path.Combine(dirPath, fileName), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                StreamReader sr = new StreamReader(fs);
+                string fileContent = sr.ReadToEnd();
+                lastLine = fileContent.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Last();
+            }
+
+            Console.WriteLine("File read to find last line - '" + lastLine + "'");
+
+            string[] splittedLine = lastLine.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+            Console.WriteLine("Splitted arr - " + stringArrToString(splittedLine) + " Length - " + splittedLine.Length);
+
+            if (splittedLine.Length == 1)
+            {
+                Console.WriteLine("Matched splitted line");
+                if (splittedLine[0].Trim().Equals(playerName))
+                {
+                    string[] step = makeStep(bots, f);
+                    Console.WriteLine("Step params");
+
+                    using (FileStream fs = new FileStream(Path.Combine(dirPath, fileName), FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
+                    {
+                        writeCommandParams(fs, step);
+                    }
+                    Console.WriteLine();
+                }
+            }
+
+            Console.WriteLine("Starting cycle");
+
+            while (true) { }
         }
 
         private static string[] makeStep(List<Bot> bots, Field f)
@@ -73,7 +106,7 @@ namespace Bots.Run
             Bot b = bots[botStepperIndex];
             botStepperIndex = (botStepperIndex + 1) % bots.Count;
             Step s = b.NextStep(f);
-            List<string> stepList = new List<string>() { s.Action.ToString() };
+            List<string> stepList = new List<string>() { b.GetType().Name, s.Action.ToString() };
             stepList.AddRange(s.ToStringParameterArray());
 
             return stepList.ToArray();
@@ -83,12 +116,26 @@ namespace Bots.Run
         {
             StreamWriter sw = new StreamWriter(s);
 
-            foreach (string param in stepArr)
+            foreach (string param in parameters)
             {
                 sw.Write(String.Format(" {0} ;", param));
+                Console.Write(String.Format(" {0} ;", param));
             }
 
+            sw.WriteLine();
             sw.Flush();
+        }
+
+        private static string stringArrToString(string[] arr)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (string a in arr)
+            {
+                sb.AppendFormat(" '{0}' ", a);
+            }
+
+            return sb.ToString();
         }
     }
 }

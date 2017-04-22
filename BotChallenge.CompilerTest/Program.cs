@@ -6,6 +6,7 @@ using BotChallenge.Compiler.Compilers.Models;
 using BotChallenge.Runner.CodeRunners.Models;
 using BotChallenge.Runner.LanguageProviders;
 using BotChallenge.Runner.CodeRunners;
+using System.Text;
 
 namespace BotChallenge.CompilerTest
 {
@@ -63,16 +64,34 @@ namespace BotChallenge.CompilerTest
 
             CompilationResult compileResult2 = compiler.CompileCode(TaskParameters.Build(2), Bot2, Bot1);
 
-            IRunnerProvider runProvider = new RunnerProvider();
-            IRunner runner = runProvider.GetRunnerForLanguage(RunnerSupportedLanguages.CSharp);
+            if (compileResult1.IsCodeCorrect && compileResult2.IsCodeCorrect)
+            {
 
-            Field field = generateField(15, 15);
+                IRunnerProvider runProvider = new RunnerProvider();
+                IRunner runner = runProvider.GetRunnerForLanguage(RunnerSupportedLanguages.CSharp);
 
-            compileResult1.InformationForCodeRunner.PlayerName = "player1";
-            compileResult2.InformationForCodeRunner.PlayerName = "player2";
+                Field field = generateField(15, 15);
 
-            runner.RunCodeGame(compileResult1.InformationForCodeRunner, compileResult2.InformationForCodeRunner, field);
+                compileResult1.InformationForCodeRunner.PlayerName = "player1";
+                compileResult2.InformationForCodeRunner.PlayerName = "player2";
+
+                runner.RunCodeGame(compileResult1.InformationForCodeRunner, compileResult2.InformationForCodeRunner, field);
+                runner.GameFinished += Runner_GameFinished;
+            }
+
             Console.ReadKey();
+        }
+
+        private static void Runner_GameFinished(object sender, GameFinishedEventArgs e)
+        {
+            Console.Clear();
+
+            Console.WriteLine("Game finished");
+
+            foreach (GameCommand command in e.Commands)
+            {
+                Console.WriteLine($" { command.PlayerName } ; { command.BotId } ; { command.ActionType } { stringArrToString(command.StepParams) } ");
+            }
         }
 
         private static Field generateField(int width, int height)
@@ -96,6 +115,18 @@ namespace BotChallenge.CompilerTest
             }
 
             return field;
+        }
+
+        private static string stringArrToString(string[] arr)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (string a in arr)
+            {
+                sb.AppendFormat("{0} ;", a);
+            }
+
+            return sb.ToString();
         }
     }
 }

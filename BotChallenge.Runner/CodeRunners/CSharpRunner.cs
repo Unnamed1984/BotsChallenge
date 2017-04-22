@@ -41,32 +41,44 @@ namespace BotChallenge.Runner.CodeRunners
                 {
                     GameCommand command = e.NewCommand;
 
+                    Console.WriteLine("File changed");
+
                     if (command.BotId == null)
                     {
                         return;
                     }
 
-                    IActionHandler actionHandler = ActionHandlersProvider.GetActionHandler(command.ActionType);
-                    Field newField = actionHandler.ApplyStep(command.StepParams, field);
+                    Console.WriteLine("user wrote full command");
 
-                    if (!newField.Equals(field))
+                    try
                     {
-                        field = newField;
-                        fs.Position = 0;
-                        BotJournalFileHelper.WriteFieldToFile(fs, field);
-                    }
+                        IActionHandler actionHandler = ActionHandlersProvider.GetActionHandler(command.ActionType);
+                        Field newField = actionHandler.ApplyStep(command.StepParams, field);
 
-                    fs.Position = fs.Length;
+                        if (!newField.Equals(field))
+                        {
+                            field = newField;
+                            fs.Position = 0;
+                            BotJournalFileHelper.WriteFieldToFile(fs, field);
+                        }
+                    }
+                    catch (ArgumentException)
+                    { }
 
-                    if (command.PlayerName == player1Info.PlayerName)
+                    using (FileStream s = new FileStream(Path.Combine(dirPath, fileName), FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
                     {
-                        sw.Write(player2Info.PlayerName);
+                        sw = new StreamWriter(s);
+
+                        if (command.PlayerName.Trim().Equals(player1Info.PlayerName))
+                        {
+                            sw.Write($" { player2Info.PlayerName } ;");
+                        }
+                        else
+                        {
+                            sw.Write($" { player1Info.PlayerName } ;");
+                        }
+                        sw.Flush();
                     }
-                    else
-                    {
-                        sw.Write(player1Info.PlayerName);
-                    }
-                    sw.Flush();
 
                     if (botFileWatcher.CommandCount > 10)
                     {
@@ -78,6 +90,7 @@ namespace BotChallenge.Runner.CodeRunners
                         botFileWatcher.Dispose();
                     }
 
+                    Console.WriteLine("user command processed");
                 };
 
                 player1Process = Process.Start(csRunInfo1.PathToExecutable, $" { dirPath } { fileName } { csRunInfo1.PlayerName }");
@@ -121,7 +134,7 @@ namespace BotChallenge.Runner.CodeRunners
 
         private void raiseFinishGameEvent(string filePath)
         {
-            FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
             this.moveToCommandsPart(ref fs);
 
@@ -131,7 +144,11 @@ namespace BotChallenge.Runner.CodeRunners
 
             while (!sr.EndOfStream)
             {
-                commands.Add(BotJournalFileHelper.ParseGameCommand(sr.ReadLine()));
+                string line = sr.ReadLine();
+                if (line != null && !string.IsNullOrWhiteSpace(line))
+                {
+                    commands.Add(BotJournalFileHelper.ParseGameCommand(line));
+                }
             }
 
             fs.Dispose();

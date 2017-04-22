@@ -11,5 +11,7 @@ namespace BotChallenge.Runner.CodeRunners
     public interface IRunner
     {
         string RunCodeGame(RunnerInformation player1Info, RunnerInformation player2Info, Field field);
+        event EventHandler<GameFinishedEventArgs> GameFinished;
+
     }
 }
