@@ -28,7 +28,10 @@ namespace SignalRMvc.Hubs
             p.ConnectionIds.Add(id);
             if (p != null)
             {
-                p.Game.SubscribeOnGameState(RunGame);
+                if (!p.Game.IsSubscriptionOnGameStateOn())
+                {
+                    p.Game.SubscribeOnGameState(RunGame);
+                }
             }
             else
             {
@@ -50,7 +53,7 @@ namespace SignalRMvc.Hubs
             // smth with model;
             GameResultViewModel result = new GameResultViewModel("test1", new List<CommandViewModel>()
             {
-                new CommandViewModel("test1", "RDD2", "Move", new String[] { "14", "14", "4", "11" }),
+                new CommandViewModel("test1", "R2D2", "Move", new String[] { "14", "14", "4", "11" }),
                                 new CommandViewModel("test2", "T34-T2", "Move", new String[] { "14", "14", "8", "6" })
             });
 

@@ -56,13 +56,19 @@ namespace BotChallenge.BLL.Models
 
         public void RaiseFilledGameEvent(String pId1, String pId2) => FilledGameEvent(pId1, pId2);
 
-        public void SubscribeOnGameState(Action<String, String> method) => ReadyGameEvent += method;
+        public bool IsSubscriptionOnGameOn()
+        {
+            return this.FilledGameEvent != null;
+        }
 
-        public void RaiseGameReadyEvent(String pId1, String pId2) => ReadyGameEvent(pId1, pId2);
+
 
         #endregion
 
         #region Player's readyness 
+        public void SubscribeOnGameState(Action<String, String> method) => ReadyGameEvent += method;
+
+        public void RaiseGameReadyEvent(String pId1, String pId2) => ReadyGameEvent(pId1, pId2);
 
         public void SetPlayerAsReady(Player p)
         {
@@ -72,6 +78,11 @@ namespace BotChallenge.BLL.Models
             {
                     RaiseGameReadyEvent(this.Players[0].Name, this.Players[1].Name);
             }
+        }
+
+        public bool IsSubscriptionOnGameStateOn()
+        {
+            return this.ReadyGameEvent != null;
         }
 
         #endregion
@@ -84,5 +95,7 @@ namespace BotChallenge.BLL.Models
             return new List<Command>();
         }
         #endregion
+
+
     }
 }

@@ -33,11 +33,10 @@ class BotsController{
             }
         }
 
-        var enemyBots = model.FieldState.Bots[first];
+        var enemyBotsCol = model.FieldState.Bots[first];
 
-        console.log(enemyBots);
-        for (var i=0; i<enemyBots.length; i++){
-            this.enemyBots.push(new Bot(enemyBots[i].X, enemyBots[i].Y, enemyBots[i].Id, enemyBots[i].Health));
+        for (var i=0; i<enemyBotsCol.length; i++){
+            this.enemyBots.push(new Bot(enemyBotsCol[i].X, enemyBotsCol[i].Y, enemyBotsCol[i].Id, enemyBotsCol[i].Health, enemyBotsCol[i].Name));
         }
 
         delete window.model;

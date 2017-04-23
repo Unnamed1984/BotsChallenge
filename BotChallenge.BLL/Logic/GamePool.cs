@@ -15,7 +15,7 @@ namespace BotChallenge.BLL.Logic
         public Game CreateGame()
         {
             Game g = new Game();
-            g.SubscribeOnThisGame((id1, id2) => StartGame());
+            //g.SubscribeOnThisGame((id1, id2) => StartGame());
 
             freeGames.Enqueue(g);
             return g;

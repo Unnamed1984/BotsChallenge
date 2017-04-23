@@ -50,7 +50,10 @@ namespace SignalRMvc.Hubs
 
                 Game g = GameManager.RegisterPlayer(p1);
 
-                g.SubscribeOnThisGame(GoToGamePage);
+                if (!g.IsSubscriptionOnGameOn())
+                {
+                    g.SubscribeOnThisGame(GoToGamePage);
+                }
             }
             else
             {

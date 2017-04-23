@@ -24,55 +24,65 @@ function setReady() {
 }
 
 function playMovie(movieParams) {
-    deleteText();
-
     console.log(movieParams);
-    for (var i = 0; i < movieParams.Commands.length; i++) {
-        window.command = movieParams.Commands[i];
 
-        setTimeout(function () {
-            var bots = controller.getBots();
-            var enemyBots = controller.getEnemyBots();
+    window.counter = 0;
 
-            var login = sessionStorage.getItem('botsLogin');
-            var command = window.command;
-            if (command.ActionType == "Move") {
-                var botId = command.BotId;
-                var playerName = command.PlayerName;
-                var stepParams = command.StepParams;
+    window.intervalId = setInterval(function () {
+        deleteText();
+        if (+window.counter == movieParams.Commands.length - 1) {
+            clearInterval(+window.intervalId);
+        }
 
-                if (login == playerName) {
-                    console.log('player found');
-                    for (var i = 0; i < bots.length; i++) {
-                        console.log('move bot');
-                        if (bots[i].Name == botId) {
-                            console.log(stepParams);
-                            focusCameraOnSprite(bots[i].sprite);
-                            onBotDown(bots[i].sprite);
+        var bots = controller.getBots();
+        var enemyBots = controller.getEnemyBots();
+
+        var login = sessionStorage.getItem('botsLogin');
+        var command = movieParams.Commands[+window.counter];
+        window.counter++;
+        if (command.ActionType == "Move") {
+            var botId = command.BotId;
+            var playerName = command.PlayerName;
+            console.log(command);
+            var stepParams = command.StepParams;
+
+            if (login == playerName) {
+                console.log('player found');
+                for (var i = 0; i < bots.length; i++) {
+                    console.log('move bot');
+                    console.log(bots[i]);
+                    console.log(botId);
+                    if (bots[i].Name == botId) {
+                        console.log('bot was found');
+                        onBotDown(bots[i].sprite);
+                        focusCameraOnTile(bots[i].X, bots[i].Y);
+                        setTimeout(function () {
                             bots[i].move(+stepParams[2], +stepParams[3]);
-                            break;
-                        }
+                        }, 2000);
+                        break;
                     }
                 }
-                else {
-                    for (var i = 0; i < enemyBots.length; i++) {
-                        console.log("enemyBots");
-                        if (enemyBots[i].Name == botId) {
-                            console.log(enemyBots[i].Name);
-                            console.log("enemyBot");
-                            focusCameraOnSprite(enemyBots[i].sprite);
-                            enemyBots[i].move(+stepParams[2], +stepParams[3]);
-                            break;
-                        }
-                    }
-                }
-
             }
             else {
-                // if shoot...
+                for (var i = 0; i < enemyBots.length; i++) {
+                    console.log("enemyBots");
+                    console.log(enemyBots[i].Name);
+                    if (enemyBots[i].Name == botId) {
+                        console.log("enemyBot was found");
+                        focusCameraOnTile(enemyBots[i].X, enemyBots[i].Y);
+                        setTimeout(function () {
+                            enemyBots[i].move(+stepParams[2], +stepParams[3]);
+                        }, 2000);
+                        break;
+                    }
+                }
             }
-        }, 5000);
-    }
+
+        }
+        else {
+            // if shoot...
+        }
+    }, 5000);
 }
 
 function addText(text) {

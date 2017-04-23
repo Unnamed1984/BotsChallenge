@@ -72,12 +72,14 @@ class Bot{
         this.x = newX;
         this.y = newY;
 
+        console.log(newX);
+        console.log(newY);
         this.sprite.x = newX * 64;
         this.sprite.y = newY * 64;
     }
 
     shoot() {
-
+        
     }
 
 
