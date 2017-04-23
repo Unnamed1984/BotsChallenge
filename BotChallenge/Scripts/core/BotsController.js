@@ -9,6 +9,7 @@ class BotsController{
         this.enemyBots = [];
         this.selectedBot = { content: null };
         this.gameState = null;
+        this.label = '';
         this.init(width, height);
     }
 

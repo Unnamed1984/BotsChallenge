@@ -68,7 +68,17 @@ class Bot{
         this.name = value;
     }
 
+    move(newX, newY) {
+        this.x = newX;
+        this.y = newY;
 
+        this.sprite.x = newX * 64;
+        this.sprite.y = newY * 64;
+    }
+
+    shoot() {
+
+    }
 
 
 

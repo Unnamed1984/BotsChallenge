@@ -26,6 +26,9 @@ namespace SignalRMvc.Hubs
 
             Clients.Clients(firstPlayerConnections).goForGame(login1);
             Clients.Clients(secondPlayerConnections).goForGame(login2);
+
+            GameManager.FindUser(login1).ConnectionIds.Clear();
+            GameManager.FindUser(login2).ConnectionIds.Clear();
         }
 
 

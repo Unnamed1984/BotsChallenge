@@ -1,4 +1,5 @@
 ﻿using BotChallenge.BLL.Models;
+using BotChallenge.Models;
 using BotChallenge.Util;
 using Microsoft.AspNet.SignalR;
 using System;
@@ -42,6 +43,20 @@ namespace SignalRMvc.Hubs
 
             Clients.Clients(firstPlayerConnections).run(login1);
             Clients.Clients(secondPlayerConnections).run(login2);
+        }
+
+        public void RunGameLast(RunBotsModel model, String login)
+        {
+            // smth with model;
+            GameResultViewModel result = new GameResultViewModel("test1", new List<CommandViewModel>()
+            {
+                new CommandViewModel("test1", "RDD2", "Move", new String[] { "14", "14", "4", "11" }),
+                                new CommandViewModel("test2", "T34-T2", "Move", new String[] { "14", "14", "8", "6" })
+            });
+
+            var connections = GameManager.FindUser(login).ConnectionIds.ToList();
+
+            Clients.Clients(connections).startGameMovie(result);
         }
 
         // Отключение пользователя
