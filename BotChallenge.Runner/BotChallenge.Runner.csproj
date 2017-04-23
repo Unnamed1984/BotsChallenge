@@ -41,6 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeRunners\CSharpRunner.cs" />
+    <Compile Include="CodeRunners\FinishGame\BotOnPointCondition.cs" />
+    <Compile Include="CodeRunners\FinishGame\CommandNumberCondition.cs" />
+    <Compile Include="CodeRunners\FinishGame\FinishGameCondition.cs" />
     <Compile Include="CodeRunners\IRunner.cs" />
     <Compile Include="CodeRunners\Lib\BotJournalFileWatcher.cs" />
     <Compile Include="CodeRunners\Lib\CommandChangedEventArgs.cs" />

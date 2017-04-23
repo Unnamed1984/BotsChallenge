@@ -10,6 +10,7 @@ using System.Text;
 using BotChallenge.BLL.JsonLoad.MapParser;
 using System.Collections.Generic;
 using System.Linq;
+using BotChallenge.Runner.CodeRunners.FinishGame;
 
 namespace BotChallenge.CompilerTest
 {
@@ -87,7 +88,8 @@ namespace BotChallenge.CompilerTest
                 compileResult1.InformationForCodeRunner.PlayerName = "player1";
                 compileResult2.InformationForCodeRunner.PlayerName = "player2";
 
-                runner.RunCodeGame(compileResult1.InformationForCodeRunner, compileResult2.InformationForCodeRunner, field, bots1.Select(b => new Runner.CodeRunners.Models.Bot() { Name = b.Name, X = b.X, Y = b.Y } ), bots2.Select(b => new Runner.CodeRunners.Models.Bot() { Name = b.Name, X = b.X, Y = b.Y }));
+                runner.RunCodeGame(compileResult1.InformationForCodeRunner, compileResult2.InformationForCodeRunner, field, bots1.Select(b => new Runner.CodeRunners.Models.Bot() { Name = b.Name, X = b.X, Y = b.Y } ), bots2.Select(b => new Runner.CodeRunners.Models.Bot() { Name = b.Name, X = b.X, Y = b.Y }),
+                    new CommandNumberCondition());
 
                 runner.GameFinished += Runner_GameFinished;
             }
