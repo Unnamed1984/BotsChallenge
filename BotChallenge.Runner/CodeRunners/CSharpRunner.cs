@@ -9,12 +9,13 @@ using BotChallenge.Runner.CodeRunners.Models.GameActions;
 using System.IO;
 using BotChallenge.Runner.CodeRunners.Lib;
 using System.Diagnostics;
+using BotChallenge.Runner.CodeRunners.FinishGame;
 
 namespace BotChallenge.Runner.CodeRunners
 {
     class CSharpRunner : IRunner
     {
-        public string RunCodeGame(RunnerInformation player1Info, RunnerInformation player2Info, Field field)
+        public string RunCodeGame(RunnerInformation player1Info, RunnerInformation player2Info, Field field, IEnumerable<Bot> bots1, IEnumerable<Bot> bots2, FinishGameCondition finishCondition)
         {
             CSharpRunnerInformation csRunInfo1 = player1Info as CSharpRunnerInformation;
             CSharpRunnerInformation csRunInfo2 = player2Info as CSharpRunnerInformation;
@@ -80,12 +81,12 @@ namespace BotChallenge.Runner.CodeRunners
                         sw.Flush();
                     }
 
-                    if (botFileWatcher.CommandCount > 10)
+                    if (finishCondition.IsFinished(field, botFileWatcher.CommandCount))
                     {
-                        raiseFinishGameEvent(Path.Combine(dirPath, fileName));
-
                         player1Process.Kill();
                         player2Process.Kill();
+
+                        raiseFinishGameEvent(Path.Combine(dirPath, fileName));
 
                         botFileWatcher.Dispose();
                     }
@@ -93,8 +94,9 @@ namespace BotChallenge.Runner.CodeRunners
                     Console.WriteLine("user command processed");
                 };
 
-                player1Process = Process.Start(csRunInfo1.PathToExecutable, $" { dirPath } { fileName } { csRunInfo1.PlayerName }");
-                player2Process = Process.Start(csRunInfo2.PathToExecutable, $" { dirPath } { fileName } { csRunInfo2.PlayerName }");
+                player1Process = Process.Start(csRunInfo1.PathToExecutable, $" { dirPath } { fileName } { csRunInfo1.PlayerName } { generateStringParameterForBots(bots1) }");
+
+                player2Process = Process.Start(csRunInfo2.PathToExecutable, $" { dirPath } { fileName } { csRunInfo2.PlayerName } { generateStringParameterForBots(bots2) } ");
 
             }
 
@@ -134,43 +136,49 @@ namespace BotChallenge.Runner.CodeRunners
 
         private void raiseFinishGameEvent(string filePath)
         {
-            FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-
-            this.moveToCommandsPart(ref fs);
-
-            StreamReader sr = new StreamReader(fs);
-
-            List<GameCommand> commands = new List<GameCommand>();
-
-            while (!sr.EndOfStream)
+            string fileContent = null;
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                string line = sr.ReadLine();
-                if (line != null && !string.IsNullOrWhiteSpace(line))
-                {
-                    commands.Add(BotJournalFileHelper.ParseGameCommand(line));
-                }
+                StreamReader sr = new StreamReader(fs);
+                fileContent = sr.ReadToEnd();
             }
 
-            fs.Dispose();
+            string[] lines = fileContent.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+            int fieldHeight = getHeightFromInitLine(lines.First());
+            List<GameCommand> commands = new List<GameCommand>();
+
+            for (int i = fieldHeight + 1; i < lines.Length; i++)
+            {
+                string line = lines[i];
+                GameCommand command = BotJournalFileHelper.ParseGameCommand(line);
+
+                if (command.BotId != null)
+                {
+                    commands.Add(command);
+                }
+            }
 
             // TODO: detect winner basing on last field state
             GameFinished?.Invoke(this, new GameFinishedEventArgs(null, commands));
         }
 
-        private void moveToCommandsPart(ref FileStream s)
+        private int getHeightFromInitLine(string line)
         {
-            StreamReader sr = new StreamReader(s);
+            string[] lineParts = line.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            return int.Parse(lineParts.Last().Trim());
+        }
 
-            string firstLine = sr.ReadLine();
+        private string generateStringParameterForBots(IEnumerable<Bot> bots)
+        {
+            StringBuilder sb = new StringBuilder();
 
-            string[] splittedBySemicolon = firstLine.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            int height = int.Parse(splittedBySemicolon[1]);
-
-            // reading all field lines
-            for (int i = 0; i < height; i++)
+            foreach (var bot in bots)
             {
-                sr.ReadLine();
+                sb.AppendFormat($" { bot.Name } { bot.X } { bot.Y } ");
             }
+
+            return sb.ToString();
         }
     }
 }

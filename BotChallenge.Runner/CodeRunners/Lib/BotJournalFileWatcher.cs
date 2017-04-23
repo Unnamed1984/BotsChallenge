@@ -24,7 +24,7 @@ namespace BotChallenge.Runner.CodeRunners.Lib
             }
             set
             {
-                if (_command == null || _command.PlayerName == null || !_command.PlayerName.Equals(value.PlayerName))
+                if (value != null && value.BotId != null)
                 {
                     commandCount++;
                 }

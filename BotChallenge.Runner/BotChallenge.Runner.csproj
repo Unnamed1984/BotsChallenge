@@ -46,6 +46,7 @@
     <Compile Include="CodeRunners\Lib\CommandChangedEventArgs.cs" />
     <Compile Include="CodeRunners\Lib\FieldChangedEventArgs.cs" />
     <Compile Include="CodeRunners\Lib\BotJournalFileHelper.cs" />
+    <Compile Include="CodeRunners\Models\Bot.cs" />
     <Compile Include="CodeRunners\Models\Field.cs" />
     <Compile Include="CodeRunners\Models\GameActions\ActionHandlersProvider.cs" />
     <Compile Include="CodeRunners\Models\GameActions\GameAction.cs" />

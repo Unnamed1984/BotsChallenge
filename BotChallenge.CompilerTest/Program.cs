@@ -7,14 +7,26 @@ using BotChallenge.Runner.CodeRunners.Models;
 using BotChallenge.Runner.LanguageProviders;
 using BotChallenge.Runner.CodeRunners;
 using System.Text;
+using BotChallenge.BLL.JsonLoad.MapParser;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BotChallenge.CompilerTest
 {
     class Program
     {
+        private static List<BLL.Models.Bot> bots1 = new List<BLL.Models.Bot>() { new BLL.Models.Bot(5, 6, "Bot1"), new BLL.Models.Bot(8, 2, "Bot2") };
+
+        private static List<BLL.Models.Bot> bots2 = new List<BLL.Models.Bot>() { new BLL.Models.Bot(9, 6, "Bot1"), new BLL.Models.Bot(8, 4, "Bot2") };
+
         static void Main(string[] args)
         {
+            //MapTest.TestJsonLoad();
+            testRunning();
+        }
 
+        private static void testRunning()
+        {
             string Bot1 = @"
                     using Bots.Models.Steps;
                     using Bots.Models;
@@ -70,12 +82,13 @@ namespace BotChallenge.CompilerTest
                 IRunnerProvider runProvider = new RunnerProvider();
                 IRunner runner = runProvider.GetRunnerForLanguage(RunnerSupportedLanguages.CSharp);
 
-                Field field = generateField(15, 15);
+                Field field = getRealField();
 
                 compileResult1.InformationForCodeRunner.PlayerName = "player1";
                 compileResult2.InformationForCodeRunner.PlayerName = "player2";
 
-                runner.RunCodeGame(compileResult1.InformationForCodeRunner, compileResult2.InformationForCodeRunner, field);
+                runner.RunCodeGame(compileResult1.InformationForCodeRunner, compileResult2.InformationForCodeRunner, field, bots1.Select(b => new Runner.CodeRunners.Models.Bot() { Name = b.Name, X = b.X, Y = b.Y } ), bots2.Select(b => new Runner.CodeRunners.Models.Bot() { Name = b.Name, X = b.X, Y = b.Y }));
+
                 runner.GameFinished += Runner_GameFinished;
             }
 
@@ -115,6 +128,19 @@ namespace BotChallenge.CompilerTest
             }
 
             return field;
+        }
+
+        private static Field getRealField()
+        {
+            FieldBuilder builder = new FieldBuilder(@"D:\Projects\C#\BotsChallenge\Server\BotChallenge\Content\levels\map1.json");
+
+            Field f = builder.GetFieldForRunner();
+
+            f = builder.PlaceBots(f, bots1, 1);
+
+            f = builder.PlaceBots(f, bots2, 2);
+
+            return f;
         }
 
         private static string stringArrToString(string[] arr)

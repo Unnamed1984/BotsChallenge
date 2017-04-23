@@ -7,11 +7,18 @@ using Bots.Models;
 using Bots.Lib;
 using System.IO;
 using System.Text;
+using Bots.Models.Steps;
 
 namespace Bots.Run
 {
     public static class Program
     {
+        private class Position
+        {
+            public int X { get; set; }
+            public int Y { get; set; }
+        }
+
         private static int botStepperIndex = 0;
         public static void Main(string[] args)
         {
@@ -22,14 +29,22 @@ namespace Bots.Run
             IEnumerable<Type> botTypes = a.GetExportedTypes().Where(t => t.BaseType == typeof(Bot));
             List<Bot> bots = new List<Bot>();
 
-            foreach (Type botType in botTypes)
-            {
-                bots.Add((Bot)Activator.CreateInstance(botType));
-            }
-
             string dirPath = args[0];
             string fileName = args[1];
             string playerName = args[2];
+            Dictionary<string, Position> botsPositions = parseBotsPosition(args.Skip(3));
+
+            foreach (Type botType in botTypes)
+            {
+                Bot b = (Bot)Activator.CreateInstance(botType);
+
+                Position position = botsPositions[botType.Name];
+                b.X = position.X;
+                b.Y = position.Y;
+
+                bots.Add(b);
+            }
+
             Field f = null;
 
             Console.WriteLine("Before reading field");
@@ -55,7 +70,7 @@ namespace Bots.Run
                     return;
                 }
 
-                string[] stepArr = makeStep(bots, f);
+                string[] stepArr = makeStep(ref bots, f);
 
                 using (FileStream fs = new FileStream(Path.Combine(dirPath, fileName), FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
                 {
@@ -85,7 +100,7 @@ namespace Bots.Run
                 Console.WriteLine("Matched splitted line");
                 if (splittedLine[0].Trim().Equals(playerName))
                 {
-                    string[] step = makeStep(bots, f);
+                    string[] step = makeStep(ref bots, f);
                     Console.WriteLine("Step params");
 
                     using (FileStream fs = new FileStream(Path.Combine(dirPath, fileName), FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
@@ -101,11 +116,32 @@ namespace Bots.Run
             while (true) { }
         }
 
-        private static string[] makeStep(List<Bot> bots, Field f)
+        private static Dictionary<string, Position> parseBotsPosition(IEnumerable<string> values)
+        {
+            Dictionary<string, Position> result = new Dictionary<string, Position>();
+            List<string> valueList = new List<string>(values);
+
+            for (int i = 0; i < valueList.Count(); i++)
+            {
+                result.Add(valueList[i], new Position() { X = int.Parse(valueList[++i]), Y = int.Parse(valueList[++i]) });
+            }
+
+            return result;
+        }
+
+        private static string[] makeStep(ref List<Bot> bots, Field f)
         {
             Bot b = bots[botStepperIndex];
             botStepperIndex = (botStepperIndex + 1) % bots.Count;
             Step s = b.NextStep(f);
+
+            if (s is MoveStep)
+            {
+                MoveStep moveStep = s as MoveStep;
+                b.X = moveStep.NewX;
+                b.Y = moveStep.NewY;
+            }
+
             List<string> stepList = new List<string>() { b.GetType().Name, s.Action.ToString() };
             stepList.AddRange(s.ToStringParameterArray());
 
