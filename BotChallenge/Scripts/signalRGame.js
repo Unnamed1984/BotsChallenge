@@ -5,6 +5,7 @@
     // Функция, вызываемая при подключении нового пользователя
     signalRGame.client.onConnected = function (id, userName, allUsers) {
         console.log('connected');
+        document.getElementById('user' + userName).innerText = "working";
     }
 
     signalRGame.client.logOut = function () {
@@ -32,8 +33,8 @@
         playMovie(result);
     }
 
-    signalRGame.client.disconnect = function () {
-        console.log('disconnected');
+    signalRGame.client.disconnect = function (login) {
+        document.getElementById('user' + login).innerText = "offline";
     }
 
     signalRGame.client.displayUnauthorizedMessage = function () {

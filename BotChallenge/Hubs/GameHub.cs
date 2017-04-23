@@ -74,7 +74,7 @@ namespace SignalRMvc.Hubs
                 //    Users.Remove(item);
                 //}
 
-                Clients.Caller.disconnect();
+                Clients.Caller.disconnect(item.Name);
                 item.ConnectionIds.Remove(Context.ConnectionId);
             }
 

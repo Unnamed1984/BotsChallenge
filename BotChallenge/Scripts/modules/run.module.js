@@ -15,10 +15,12 @@ function setReady() {
 
     var login = sessionStorage.getItem('botsLogin');
 
+    document.getElementById('user' + login).innerText = "working";
+
     var signalRGame = $.connection.gameHub;
     signalRGame.server.setReadyForGame(login);
 
-    addText('Waiting for another player...');
+    addText('Waiting for another player...', '#c9eaf2');
 
     controller.setGameState('gameIsGoing');
 }
@@ -27,11 +29,17 @@ function playMovie(movieParams) {
     console.log(movieParams);
 
     window.counter = 0;
-
+    
+    deleteText();
     window.intervalId = setInterval(function () {
-        deleteText();
         if (+window.counter == movieParams.Commands.length - 1) {
             clearInterval(+window.intervalId);
+            if (movieParams.WinnerName == sessionStorage.getItem('botsLogin')) {
+                addText('VICTORY', 'green');
+            }
+            else {
+                addText('DEFEAT, red');
+            }
         }
 
         var bots = controller.getBots();
@@ -85,8 +93,8 @@ function playMovie(movieParams) {
     }, 5000);
 }
 
-function addText(text) {
-    var style = { font: 'bold 60pt Arial', fill: '#c9eaf2', align: 'center', wordWrap: true, wordWrapWidth: 600 };
+function addText(text, color) {
+    var style = { font: 'bold 60pt Arial', fill: color, align: 'center', wordWrap: true, wordWrapWidth: 600 };
     var text = game.add.text(game.world.centerX, game.world.centerY, text, style);
     text.padding.set(10, 16);
     text.anchor.setTo(0.5, 0.5);

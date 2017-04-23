@@ -61,8 +61,6 @@ namespace BotChallenge.BLL.Models
             return this.FilledGameEvent != null;
         }
 
-
-
         #endregion
 
         #region Player's readyness 
