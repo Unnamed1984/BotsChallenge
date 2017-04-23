@@ -23,29 +23,32 @@ namespace Bots.Lib
             }
             set
             {
-                if (!_command.PlayerName.Equals(value.PlayerName))
+                if (_command == null || _command.PlayerName == null || !_command.PlayerName.Equals(value.PlayerName))
                 {
                     commandCount++;
                 }
                 _command = value;
             }
         }
-        private string lastLine;
+        private string lastLine = "";
 
-        private string watchingFilePath;
+        private string watchingFilePath = "";
 
         internal BotJournalFileWatcher(string directory, string fileName)
         {
-            using (FileStream fs = new FileStream(Path.Combine(directory, fileName), FileMode.OpenOrCreate, FileAccess.Read))
+            using (FileStream fs = new FileStream(Path.Combine(directory, fileName), FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
             {
                 field = BotJournalFileHelper.ReadFieldFromStream(fs);
             }
             
             fsWatcher = new FileSystemWatcher(directory);
             fsWatcher.NotifyFilter = NotifyFilters.LastWrite;
+            fsWatcher.EnableRaisingEvents = true;
 
             fsWatcher.Changed += FsWatcher_Changed;
             watchingFilePath = Path.Combine(directory, fileName);
+
+            Console.WriteLine("Watching file - " + watchingFilePath);
         }
 
         /// <summary>
@@ -57,14 +60,18 @@ namespace Bots.Lib
         /// <param name="e"> EventArgs for this kind of event. </param>
         private void FsWatcher_Changed(object sender, FileSystemEventArgs e)
         {
+            Console.WriteLine("file changed");
+
             if (e.FullPath != watchingFilePath)
             {
                 return;
             }
 
+            Console.WriteLine("Our file changed");
+
             string fileContent;
 
-            using (FileStream fs = new FileStream(watchingFilePath, FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream(watchingFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 StreamReader sr = new StreamReader(fs);
                 fileContent = sr.ReadToEnd();
@@ -78,6 +85,10 @@ namespace Bots.Lib
                 {
                     field = BotJournalFileHelper.ReadFieldFromStream(ms);
                 }
+
+                Console.WriteLine("field edited");
+                Console.WriteLine();
+
                 if (FieldEdited != null)
                 {
                     FieldEdited.Invoke(this, new FieldChangedEventArgs(this.field, field));
@@ -86,6 +97,9 @@ namespace Bots.Lib
             else
             {
                 GameCommand command = BotJournalFileHelper.ParseGameCommand(lines.Last());
+
+                Console.WriteLine("command edited");
+                Console.WriteLine();
 
                 if (CommandEdited != null)
                 {

@@ -8,11 +8,11 @@
 
 
 function sendPost(url, data) {
-    var body = "code=" + data;
+    var body = { code: data };
     var xhr = new XMLHttpRequest();
     xhr.open('POST', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-    xhr.send(body);
+    xhr.setRequestHeader('Content-Type', 'application/json')
+    xhr.send(JSON.stringify(body));
 
     return xhr;
 }

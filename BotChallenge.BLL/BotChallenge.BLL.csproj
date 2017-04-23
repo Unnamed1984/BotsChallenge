@@ -34,6 +34,10 @@
       <HintPath>..\packages\AutoMapper.6.0.2\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,6 +53,10 @@
     <Compile Include="Entities\Enums\PointType.cs" />
     <Compile Include="Entities\Field.cs" />
     <Compile Include="Entities\Game.cs" />
+    <Compile Include="JsonLoad\MapParser\MapJsonParser.cs" />
+    <Compile Include="JsonLoad\MapParser\Models\FieldTileSetModel.cs" />
+    <Compile Include="JsonLoad\MapParser\Models\LayerTileSetModel.cs" />
+    <Compile Include="JsonLoad\MapParser\Models\TileSetJsonModel.cs" />
     <Compile Include="Logic\BotsCompiler.cs" />
     <Compile Include="Logic\GamePool.cs" />
     <Compile Include="Entities\Player.cs" />
@@ -61,10 +69,15 @@
       <Project>{a7cba876-442a-4673-b40e-bb537a44b583}</Project>
       <Name>BotChallenge.Compiler</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BotChallenge.Runner\BotChallenge.Runner.csproj">
+      <Project>{44d47dfa-7434-4faa-9183-bd722bbbc521}</Project>
+      <Name>BotChallenge.Runner</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

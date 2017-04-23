@@ -17,6 +17,10 @@ namespace Bots.Core
             {
                 return this.x;
             }
+            set
+            {
+                this.x = value;
+            }
         }
 
         public int Y
@@ -24,6 +28,10 @@ namespace Bots.Core
             get
             {
                 return this.y;
+            }
+            set
+            {
+                this.y = value;
             }
         }
 
