@@ -53,11 +53,13 @@
     <Compile Include="Entities\Enums\PointType.cs" />
     <Compile Include="Entities\Field.cs" />
     <Compile Include="Entities\Game.cs" />
-    <Compile Include="JsonLoad\MapParser\MapJsonParser.cs" />
+    <Compile Include="JsonLoad\MapParser\FieldBuilder.cs" />
     <Compile Include="JsonLoad\MapParser\Models\FieldTileSetModel.cs" />
     <Compile Include="JsonLoad\MapParser\Models\LayerTileSetModel.cs" />
     <Compile Include="JsonLoad\MapParser\Models\TileSetJsonModel.cs" />
     <Compile Include="Logic\BotsCompiler.cs" />
+    <Compile Include="Logic\BotsRunner.cs" />
+    <Compile Include="Logic\GameFinishType.cs" />
     <Compile Include="Logic\GamePool.cs" />
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Entities\Point.cs" />
