@@ -135,15 +135,15 @@ namespace Bots.Run
             botStepperIndex = (botStepperIndex + 1) % bots.Count;
             Step s = b.NextStep(f);
 
+            List<string> stepList = new List<string>() { b.GetType().Name, s.Action.ToString() };
+            stepList.AddRange(s.ToStringParameterArray());
+
             if (s is MoveStep)
             {
                 MoveStep moveStep = s as MoveStep;
                 b.X = moveStep.NewX;
                 b.Y = moveStep.NewY;
             }
-
-            List<string> stepList = new List<string>() { b.GetType().Name, s.Action.ToString() };
-            stepList.AddRange(s.ToStringParameterArray());
 
             return stepList.ToArray();
         }

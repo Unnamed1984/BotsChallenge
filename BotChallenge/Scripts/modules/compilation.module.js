@@ -4,7 +4,7 @@ document.getElementById('compilationBtn').onclick = function () {
     var code = document.getElementById('code').value;
     
     console.log(code);
-    var request = sendPost("/Game/CompileBot", code);
+    var request = sendPost("/Game/CompileBot", { code: code });
     request.onreadystatechange = function () { // (3)
         if (request.readyState != 4) return;
 
@@ -28,39 +28,39 @@ document.getElementById('compilationBtn').onclick = function () {
 
 document.getElementById('runBtn').onclick = function () {
     hideUI();
-    //var selected = controller.getSelectedBot();
-    //saveCode(selected);
+    var selected = controller.getSelectedBot();
+    saveCode(selected);
 
-    //var code = [];
+    var code = [];
    
-    //var bots = controller.getBots();
-    //for (var i = 0; i < bots.length; i++) {
-    //    code.push(bots[i].Code);
-    //}
+    var bots = controller.getBots();
+    for (var i = 0; i < bots.length; i++) {
+        code.push(bots[i].Code);
+    }
 
-    //console.log(code);
-    //console.log(bots.length);
-    //var request = sendPost("/Game/CompileBots", { Code: code, BotsCount: bots.length });
-    //request.onreadystatechange = function () { // (3)
-    //    if (request.readyState != 4) return;
+    console.log(code);
+    console.log(bots.length);
+    var request = sendPost("/Game/CompileBots", { Code: code, BotsCount: bots.length });
+    request.onreadystatechange = function () { // (3)
+        if (request.readyState != 4) return;
 
-    //    if (request.status != 200) {
-    //        alert(request.status + ': ' + request.statusText);
-    //    } else {
-    //        var result = JSON.parse(request.responseText);
-    //        if (result.IsCodeCorrect) {
-    //            setCodeAsCorrect();
-    //            highLightPanelAsCorrect();
-    setReady();
-    //        } else {
-    //            setCodeAsIncorrect(result.Errors);
-    //            highLightPanelAsIncorrect(result.Errors);
-    //        }
+        if (request.status != 200) {
+            alert(request.status + ': ' + request.statusText);
+        } else {
+            var result = JSON.parse(request.responseText);
+            if (result.IsCodeCorrect) {
+                setCodeAsCorrect();
+                highLightPanelAsCorrect();
+                setReady();
+            } else {
+                setCodeAsIncorrect(result.Errors);
+                highLightPanelAsIncorrect(result.Errors);
+            }
 
-    //        saveErrorsState(controller.getSelectedBot());
-    //    }
+            saveErrorsState(controller.getSelectedBot());
+        }
 
-    //}
+    }
 }
 
 function clearErrors() {
