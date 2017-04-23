@@ -24,16 +24,16 @@ namespace BotChallenge.Runner.CodeRunners.Lib
             }
             set
             {
-                if (!_command.PlayerName.Equals(value.PlayerName))
+                if (value != null && value.BotId != null)
                 {
                     commandCount++;
                 }
                 _command = value;
             }
         }
-        private string lastLine;
+        private string lastLine = "";
 
-        private string watchingFilePath;
+        private string watchingFilePath = "";
 
         internal BotJournalFileWatcher(string directory, string fileName)
         {
@@ -44,6 +44,7 @@ namespace BotChallenge.Runner.CodeRunners.Lib
             
             fsWatcher = new FileSystemWatcher(directory);
             fsWatcher.NotifyFilter = NotifyFilters.LastWrite;
+            fsWatcher.EnableRaisingEvents = true;
 
             fsWatcher.Changed += FsWatcher_Changed;
             watchingFilePath = Path.Combine(directory, fileName);
@@ -58,6 +59,7 @@ namespace BotChallenge.Runner.CodeRunners.Lib
         /// <param name="e"> EventArgs for this kind of event. </param>
         private void FsWatcher_Changed(object sender, FileSystemEventArgs e)
         {
+            Console.WriteLine("BOT_FILE_WATCHER file edited");
             if (e.FullPath != watchingFilePath)
             {
                 return;
@@ -65,7 +67,7 @@ namespace BotChallenge.Runner.CodeRunners.Lib
 
             string fileContent;
 
-            using (FileStream fs = new FileStream(watchingFilePath, FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream(watchingFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 StreamReader sr = new StreamReader(fs);
                 fileContent = sr.ReadToEnd();
@@ -79,12 +81,14 @@ namespace BotChallenge.Runner.CodeRunners.Lib
                 {
                     field = BotJournalFileHelper.ReadFieldFromStream(ms);
                 }
+                Console.WriteLine("field edited");
                 FieldEdited?.Invoke(this, new FieldChangedEventArgs(this.field, field));
             }
             else
             {
                 GameCommand command = BotJournalFileHelper.ParseGameCommand(lines.Last());
 
+                Console.WriteLine("command edited");
                 CommandEdited?.Invoke(this, new CommandChangedEventArgs(this.command, command));
                 this.command = command;
                 lastLine = lines.Last();

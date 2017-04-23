@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{44D47DFA-7434-4FAA-9183-BD722BBBC521}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{4EE580B7-F8D2-4861-961E-5BF0FEB9742D}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BotChallenge.Runner</RootNamespace>
-    <AssemblyName>BotChallenge.Runner</AssemblyName>
+    <RootNamespace>FSWatcherTest</RootNamespace>
+    <AssemblyName>FSWatcherTest</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -40,37 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeRunners\CSharpRunner.cs" />
-    <Compile Include="CodeRunners\FinishGame\BotOnPointCondition.cs" />
-    <Compile Include="CodeRunners\FinishGame\CommandNumberCondition.cs" />
-    <Compile Include="CodeRunners\FinishGame\FinishGameCondition.cs" />
-    <Compile Include="CodeRunners\IRunner.cs" />
-    <Compile Include="CodeRunners\Lib\BotJournalFileWatcher.cs" />
-    <Compile Include="CodeRunners\Lib\CommandChangedEventArgs.cs" />
-    <Compile Include="CodeRunners\Lib\FieldChangedEventArgs.cs" />
-    <Compile Include="CodeRunners\Lib\BotJournalFileHelper.cs" />
-    <Compile Include="CodeRunners\Models\Bot.cs" />
-    <Compile Include="CodeRunners\Models\Field.cs" />
-    <Compile Include="CodeRunners\Models\GameActions\ActionHandlersProvider.cs" />
-    <Compile Include="CodeRunners\Models\GameActions\GameAction.cs" />
-    <Compile Include="CodeRunners\Models\GameActions\IActionHandler.cs" />
-    <Compile Include="CodeRunners\Models\GameActions\MoveActionHandler.cs" />
-    <Compile Include="CodeRunners\Models\GameActions\ShootActionHandler.cs" />
-    <Compile Include="CodeRunners\Models\GameCommand.cs" />
-    <Compile Include="CodeRunners\Models\GameFinishedEventArgs.cs" />
-    <Compile Include="Exceptions\UnSupportedLanguageException.cs" />
-    <Compile Include="LanguageProviders\RunnerSupportedLanguages.cs" />
-    <Compile Include="LanguageProviders\IRunnerProvider.cs" />
-    <Compile Include="LanguageProviders\RunnerProvider.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BotChallenge.LanguageCompiler\BotChallenge.Compiler.csproj">
-      <Project>{a7cba876-442a-4673-b40e-bb537a44b583}</Project>
-      <Name>BotChallenge.Compiler</Name>
-    </ProjectReference>
+    <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="info.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

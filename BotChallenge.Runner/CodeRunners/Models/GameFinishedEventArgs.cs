@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BotChallenge.Runner.CodeRunners.Models
 {
-    class GameFinishedEventArgs : EventArgs
+    public class GameFinishedEventArgs : EventArgs
     {
         public GameFinishedEventArgs(string winnerName, IEnumerable<GameCommand> commands)
         {
