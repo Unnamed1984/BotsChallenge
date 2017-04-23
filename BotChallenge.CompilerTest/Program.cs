@@ -46,12 +46,35 @@ namespace BotChallenge.CompilerTest
             string Bot2 = @"
                     using Bots.Models.Steps;
                     using Bots.Models;
+                    using System;
+
                     namespace Bots.Core 
                     {
                         public class Bot2 : Bot 
                         {
                             public override Step NextStep(Field f) 
                             {
+                                Random r = new Random();
+
+                                int next = r.Next(4);
+
+                                switch(next) 
+                                {
+                                    case 0:
+                                         return new MoveStep(this, this.X + 1, this.Y);
+                                        break;
+                                    case 1:
+                                         return new MoveStep(this, this.X - 1, this.Y);
+                                        break;
+                                    case 2:
+                                         return new MoveStep(this, this.X, this.Y + 1);
+                                        break;
+                                    case 3:
+                                         return new MoveStep(this, this.X, this.Y - 1);
+                                        break;
+
+                                }
+
                                 return new MoveStep(this, this.X, this.Y + 1);
                             }
                         }
