@@ -15,13 +15,14 @@ function setReady() {
 
     var login = sessionStorage.getItem('botsLogin');
 
-    document.getElementById('user' + login).innerText = "working";
+    document.getElementById('user_' + login).innerText = "ready";
 
+    console.log('text1');
     var signalRGame = $.connection.gameHub;
     signalRGame.server.setReadyForGame(login);
 
     addText('Waiting for another player...', '#c9eaf2');
-
+    console.log('text2');
     controller.setGameState('gameIsGoing');
 }
 

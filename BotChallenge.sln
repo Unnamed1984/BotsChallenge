@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotChallenge.Compiler", "Bo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotChallenge.Runner", "BotChallenge.Runner\BotChallenge.Runner.csproj", "{44D47DFA-7434-4FAA-9183-BD722BBBC521}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSWatcherTest", "FSWatcherTest\FSWatcherTest.csproj", "{4EE580B7-F8D2-4861-961E-5BF0FEB9742D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,10 +39,6 @@ Global
 		{44D47DFA-7434-4FAA-9183-BD722BBBC521}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44D47DFA-7434-4FAA-9183-BD722BBBC521}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44D47DFA-7434-4FAA-9183-BD722BBBC521}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4EE580B7-F8D2-4861-961E-5BF0FEB9742D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4EE580B7-F8D2-4861-961E-5BF0FEB9742D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4EE580B7-F8D2-4861-961E-5BF0FEB9742D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4EE580B7-F8D2-4861-961E-5BF0FEB9742D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

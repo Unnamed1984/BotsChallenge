@@ -27,27 +27,39 @@ document.getElementById('compilationBtn').onclick = function () {
 }
 
 document.getElementById('runBtn').onclick = function () {
+    console.log("run handler");
     hideUI();
     var selected = controller.getSelectedBot();
     saveCode(selected);
 
     var code = [];
-   
+
+    console.log("pushing to bots");
+
     var bots = controller.getBots();
     for (var i = 0; i < bots.length; i++) {
         code.push(bots[i].Code);
     }
 
+    console.log("Sending request");
     console.log(code);
     console.log(bots.length);
     var request = sendPost("/Game/CompileBots", { Code: code, BotsCount: bots.length });
+
+    // mark
     request.onreadystatechange = function () { // (3)
-        if (request.readyState != 4) return;
+        if (request.readyState != 4) {
+            console.log('hmmm');
+            console.log(request);
+            return;
+        }
 
         if (request.status != 200) {
             alert(request.status + ': ' + request.statusText);
         } else {
             var result = JSON.parse(request.responseText);
+            console.log("Request result");
+            console.log(result);
             if (result.IsCodeCorrect) {
                 setCodeAsCorrect();
                 highLightPanelAsCorrect();
