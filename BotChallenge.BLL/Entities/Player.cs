@@ -13,5 +13,7 @@ namespace BotChallenge.BLL.Models
         public Game Game { get; set; }
         public bool IsReady { get; set; } = false;
         public HashSet<string> ConnectionIds { get; set; }
+        public string[] BotsCode { get; set; }
+        public int BotsCount { get; set; }
     }
 }

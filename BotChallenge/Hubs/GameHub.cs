@@ -1,4 +1,5 @@
-﻿using BotChallenge.BLL.Models;
+﻿using BotChallenge.BLL.Logic;
+using BotChallenge.BLL.Models;
 using BotChallenge.Models;
 using BotChallenge.Util;
 using Microsoft.AspNet.SignalR;
@@ -51,15 +52,31 @@ namespace SignalRMvc.Hubs
         public void RunGameLast(RunBotsModel model, String login)
         {
             // smth with model;
-            GameResultViewModel result = new GameResultViewModel("test1", new List<CommandViewModel>()
+            //GameResultViewModel result = new GameResultViewModel("test1", new List<CommandViewModel>()
+            //{
+            //    new CommandViewModel("test1", "R2D2", "Move", new String[] { "14", "14", "4", "11" }),
+            //                    new CommandViewModel("test2", "T34-T2", "Move", new String[] { "14", "14", "8", "6" })
+            //});
+
+            Player p = GameManager.FindUser(login);
+
+            p.BotsCode = model.Code;
+            p.BotsCount = model.BotsCount;
+
+            Game game = p.Game;
+
+            if (game.Players.Any(pl => pl.BotsCode.Length == 0))
             {
-                new CommandViewModel("test1", "R2D2", "Move", new String[] { "14", "14", "4", "11" }),
-                                new CommandViewModel("test2", "T34-T2", "Move", new String[] { "14", "14", "8", "6" })
-            });
+                return;
+            }
+
+            BotsRunner runner = new BotsRunner();
+
+            runner.RunCode(game.Players.First().BotsCode, game.Players.Last().BotsCode, game.Field.MapPath, GameFinishType.CommandsNumber, game.Field.Bots[game.Players.First().Name], game.Field.Bots[game.Players.Last().Name]);
 
             var connections = GameManager.FindUser(login).ConnectionIds.ToList();
 
-            Clients.Clients(connections).startGameMovie(result);
+            // Clients.Clients(connections).startGameMovie(result);
         }
 
         // Отключение пользователя

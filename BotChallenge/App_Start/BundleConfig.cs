@@ -9,20 +9,20 @@ namespace BotChallenge
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+                        "~/Scripts/lib/jquery-{version}.js"));
 
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js"));
+                      "~/Scripts/lib/bootstrap.js",
+                      "~/Scripts/lib/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/register").Include("~/Scripts/register.js"));
             bundles.Add(new ScriptBundle("~/bundles/waiting").Include("~/Scripts/waiting.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/SignalRSrcipts").Include("~/Scripts/jquery-1.6.4.min.js")
-                                                                    .Include("~/Scripts/jquery.signalR-2.2.1.min.js")
+            bundles.Add(new ScriptBundle("~/bundles/SignalRSrcipts").Include("~/Scripts/lib/jquery-1.6.4.min.js")
+                                                                    .Include("~/Scripts/lib/jquery.signalR-2.2.1.min.js")
                                                                     .Include("~/signalr/hubs")
-                                                                    .Include("~/Scripts/singnalRPart.js"));
+                                                                    .Include("~/Scripts/signalRPart.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/phaser-lib").Include("~/Scripts/lib/phaser.js"));
 
@@ -32,7 +32,7 @@ namespace BotChallenge
 
             bundles.Add(new ScriptBundle("~/bundles/phaser-modules").Include("~/Scripts/modules/bots.module.js")
                                                                         .Include("~/Scripts/modules/camera.module.js")
-                                                                        .Include("~/Scripts/modules/initializing.module.js")
+                                                                        .Include("~/Scripts/module/initializing.module.js")
                                                                         .Include("~/Scripts/modules/util.js")
                                                                         .Include("~/Scripts/modules/ajax.module.js")
                                                                         .Include("~/Scripts/modules/compilation.module.js")

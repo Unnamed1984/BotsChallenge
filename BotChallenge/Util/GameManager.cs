@@ -12,7 +12,6 @@ namespace BotChallenge.Util
     public static class GameManager
     {
         public static List<Player> Users = new List<Player>();
-        public static GamePool pool = new GamePool();
 
         public static void AddUser(Player p)
         {
@@ -31,7 +30,7 @@ namespace BotChallenge.Util
 
         public static BLL.Models.Game RegisterPlayer(Player p1)
         {
-            return pool.RegisterPlayer(p1);
+            return GamePool.RegisterPlayer(p1);
         }
 
         public static List<String> UnregisterUser(String login)

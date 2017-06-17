@@ -54,7 +54,7 @@ namespace BotChallenge.BLL.Models
 
         public void SubscribeOnThisGame(Action<String, String> method) => FilledGameEvent += method;
 
-        public void RaiseFilledGameEvent(String pId1, String pId2) => FilledGameEvent(pId1, pId2);
+        public void RaiseFilledGameEvent(String pId1, String pId2) => FilledGameEvent?.Invoke(pId1, pId2);
 
         public bool IsSubscriptionOnGameOn()
         {
