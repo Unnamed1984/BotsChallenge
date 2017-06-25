@@ -30,15 +30,15 @@ namespace BotChallenge
                                                                     .Include("~/Scripts/core/BotsController.js")
                                                                     .Include("~/Scripts/core/phaser.game.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/phaser-modules").Include("~/Scripts/modules/bots.module.js")
-                                                                        .Include("~/Scripts/modules/camera.module.js")
-                                                                        .Include("~/Scripts/module/initializing.module.js")
-                                                                        .Include("~/Scripts/modules/util.js")
-                                                                        .Include("~/Scripts/modules/ajax.module.js")
-                                                                        .Include("~/Scripts/modules/compilation.module.js")
-                                                                        .Include("~/Scripts/modules/run.module.js"));
+            bundles.Add(new ScriptBundle("~/bundles/phaser-modules").Include("~/Scripts/modules/game/bots.module.js")
+                                                                        .Include("~/Scripts/modules/game/camera.module.js")
+                                                                        .Include("~/Scripts/module/game/initializing.module.js")
+                                                                        .Include("~/Scripts/modules/game/util.js")
+                                                                        .Include("~/Scripts/modules/game/ajax.module.js")
+                                                                        .Include("~/Scripts/modules/game/compilation.module.js")
+                                                                        .Include("~/Scripts/modules/game/run.module.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/signalRGame").Include("~/Scripts/jquery.signalR-2.2.1.min.js")
+            bundles.Add(new ScriptBundle("~/bundles/signalRGame").Include("~/Scripts/lib/jquery.signalR-2.2.1.min.js")
                                                                     .Include("~/signalr/hubs")
                                                                     .Include("~/Scripts/signalRGame.js"));
 
