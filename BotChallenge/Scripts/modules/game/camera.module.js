@@ -2,38 +2,50 @@
  * Created by Paul on 14.04.2017.
  */
 
-function focusCameraOnTile(x, y){
-    game.camera.focusOnXY(x*tile_size, y*tile_size);
-}
+define([], function () {
+    "use strict";
 
-function moveCamera(x, y){
-    game.camera.x += x;
-    game.camera.y += y;
-}
+    class CameraModule {
 
-function focusCameraOnSprite(sprite){
-    game.camera.focusOn(sprite);
-}
+        constructor(game, controller) {
+            this.game = game;
+            this.controller = controller;
+        }
 
-function cameraController() {
-    if (controller.getGameState() == "ready") {
-        return;
+        focusCameraOnTile(x, y) {
+            this.game.camera.focusOnXY(x * tile_size, y * tile_size);
+        }
+
+        moveCamera(x, y) {
+            this.game.camera.x += x;
+            this.game.camera.y += y;
+        }
+
+        focusCameraOnSprite(sprite) {
+            this.game.camera.focusOn(sprite);
+        }
+
+        cameraTickHandler() {
+            var cursors = this.game.input.keyboard.createCursorKeys();
+            if (this.controller.getGameState() == "ready") {
+                return;
+            }
+
+            if (cursors.left.isDown) {
+                this.moveCamera(-5, 0);
+            }
+            else if (cursors.right.isDown) {
+                this.moveCamera(5, 0);
+            }
+
+            if (cursors.up.isDown) {
+                this.moveCamera(0, -5);
+            }
+            else if (cursors.down.isDown) {
+                this.moveCamera(0, 5);
+            }
+        }
     }
 
-    if (cursors.left.isDown)
-    {
-        moveCamera(-5, 0);
-    }
-    else if (cursors.right.isDown)
-    {
-        moveCamera(5, 0);
-    }
-
-    if (cursors.up.isDown)
-    {
-        moveCamera(0, -5);
-    }
-    else if (cursors.down.isDown){
-        moveCamera(0, 5);
-    }
-}
+    return CameraModule;
+});

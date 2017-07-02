@@ -4,7 +4,3 @@
         signalRHubs: "../signalr/hubs?noext"
     }
 });
-
-require(['pages/registration.page'], function (page) {
-    page.initialize();
-});

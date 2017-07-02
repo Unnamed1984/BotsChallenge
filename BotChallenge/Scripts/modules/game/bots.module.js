@@ -2,85 +2,104 @@
  * Created by Paul on 14.04.2017.
  */
 
-function onBotDown(sprite, pointer){
-    sprite.animations.play("selected");
+define(["modules/game/camera.module",
+        "modules/game/compilation.module"], function (CameraModule, CompilationModule) {
+    "use strict"
 
-    focusCameraOnSprite(sprite);
+    class BotsModule {
 
-    var selectedBot = controller.getSelectedBot();
-    if (selectedBot.content != null){
-        selectedBot.content.sprite.animations.stop();
-        selectedBot.content.sprite.frame = 0;
-        deselectListItem(selectedBot.content.Id);
+        constructor(game, controller) {
+            this.game = game;
+            this.controller = controller;
+        }
 
-        saveCode(selectedBot);
-    }
+        get cameraModule() {
+            if (!this.__cameraModule) {
+                this.__cameraModule = new CameraModule(this.game, this.controller);
+            }
+            return this.__cameraModule;
+        }
 
-    var bots = controller.getBots();
+        get compilationModule() {
+            if (!this.__compilationModule) {
+                this.__compilationModule = new CompilationModule(this.game, this.controller);
+            }
+            return this.__compilationModule;
+        }
 
-    for (var i=0; i<bots.length; i++){
-        if (bots[i].sprite.renderOrderID == sprite.renderOrderID){
-            selectedBot.content = bots[i];
-            displayCode(selectedBot.content);
-            displayErrorsState(selectedBot.content);
+        onBotDown(sprite, pointer) {
+            sprite.animations.play("selected");
+
+            this.cameraModule.focusCameraOnSprite(sprite);
+
+            var selectedBot = this.controller.getSelectedBot();
+
+            if (selectedBot.content != null) {
+                selectedBot.content.sprite.animations.stop();
+                selectedBot.content.sprite.frame = 0;
+                this.deselectListItem(selectedBot.content.Id);
+
+                this.saveCode(selectedBot);
+            }
+
+            var bots = this.controller.getBots();
+
+            for (var i = 0; i < bots.length; i++) {
+                if (bots[i].sprite.renderOrderID == sprite.renderOrderID) {
+                    selectedBot.content = bots[i];
+                    this.displayCode(selectedBot.content);
+                    this.displayErrorsState(selectedBot.content);
+                }
+            }
+
+            this.selectListItem(selectedBot.content.id);
+
+            selectedBot.content.sprite.animations.play('selected');
+        }
+
+        deselectListItem(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        selectListItem(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        saveCode(selectedBot) {
+            selectedBot.content.Code = document.getElementById('code').value;
+
+            localStorage.setItem('bot' + selectedBot.content.Id, selectedBot.content.Code);
+        }
+
+        displayCode(selectedBot) {
+            document.getElementById('code').value = selectedBot.Code;
+        }
+
+        saveErrorsState(selectedBot) {
+            localStorage.setItem('bot_isCodeCorrect' + selectedBot.content.Id, selectedBot.content.IsCodeCorrect);
+            localStorage.setItem('bot_errors' + selectedBot.content.Id, JSON.stringify(selectedBot.content.Errors));
+        }
+
+        displayErrorsState(selectedBot) {
+            var isCorrect = localStorage.getItem('bot_isCodeCorrect' + selectedBot.Id);
+            var errors = JSON.parse(localStorage.getItem('bot_errors' + selectedBot.Id));
+
+            switch (isCorrect) {
+                case null:
+                    this.compilationModule.setCodeAsDefault();
+                    this.compilationModule.highLightPanelAsDefault();
+                    break;
+                case 'false':
+                    this.compilationModule.setCodeAsIncorrect(errors);
+                    this.compilationModule.highLightPanelAsIncorrect(errors);
+                    break;
+                case 'true':
+                    this.compilationModule.setCodeAsCorrect();
+                    this.compilationModule.highLightPanelAsCorrect();
+                    break;
+            }
         }
     }
-
-    selectListItem(selectedBot.content.id);
-
-    selectedBot.content.sprite.animations.play('selected');
-
-
-    // День Космонавтики!!!!!!!
-
-    // setTimeout(function () {
-    //     setInterval(function () {
-    //         sprite.y -= 10;
-    //     }, 100);
-    // }, 1000);
-}
-
-function deselectListItem(id){
-    document.getElementById(id).classList.remove('active');
-}
-
-function selectListItem(id){
-    document.getElementById(
-        id).classList.add('active');
-}
-
-function saveCode(selectedBot){
-    selectedBot.content.Code = document.getElementById('code').value;
-
-    localStorage.setItem('bot' + selectedBot.content.Id, selectedBot.content.Code);
-}
-
-function displayCode(selectedBot){
-    document.getElementById('code').value = selectedBot.Code;
-}
-
-function saveErrorsState(selectedBot) {
-    localStorage.setItem('bot_isCodeCorrect' + selectedBot.content.Id, selectedBot.content.IsCodeCorrect);
-    localStorage.setItem('bot_errors' + selectedBot.content.Id, JSON.stringify(selectedBot.content.Errors));
-}
-
-function displayErrorsState(selectedBot) {
-    var isCorrect = localStorage.getItem('bot_isCodeCorrect' + selectedBot.Id);
-    var errors = JSON.parse(localStorage.getItem('bot_errors' + selectedBot.Id));
-
-    switch (isCorrect) {
-        case null:
-            setCodeAsDefault();
-            highLightPanelAsDefault();
-            break;
-        case 'false':
-            setCodeAsIncorrect(errors);
-            highLightPanelAsIncorrect(errors);
-            break;
-        case 'true':
-            setCodeAsCorrect();
-            highLightPanelAsCorrect();
-            break;
-    }
-}
+    return BotsModule;
+});
 
