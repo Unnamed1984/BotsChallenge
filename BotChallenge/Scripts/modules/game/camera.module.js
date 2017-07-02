@@ -7,36 +7,42 @@ define([], function () {
 
     class CameraModule {
 
-        this.focusCameraOnTile = function focusCameraOnTile(x, y) {
-            game.camera.focusOnXY(x * tile_size, y * tile_size);
+        constructor(game, controller) {
+            this.game = game;
+            this.controller = controller;
         }
 
-        this.moveCamera = function moveCamera(x, y) {
-            game.camera.x += x;
-            game.camera.y += y;
+        focusCameraOnTile(x, y) {
+            this.game.camera.focusOnXY(x * tile_size, y * tile_size);
         }
 
-        this.focusCameraOnSprite = function focusCameraOnSprite(sprite) {
-            game.camera.focusOn(sprite);
+        moveCamera(x, y) {
+            this.game.camera.x += x;
+            this.game.camera.y += y;
         }
 
-        this.cameraTickHandler = cameraTickHandler() {
-            if (controller.getGameState() == "ready") {
+        focusCameraOnSprite(sprite) {
+            this.game.camera.focusOn(sprite);
+        }
+
+        cameraTickHandler() {
+            var cursors = this.game.input.keyboard.createCursorKeys();
+            if (this.controller.getGameState() == "ready") {
                 return;
             }
 
             if (cursors.left.isDown) {
-                moveCamera(-5, 0);
+                this.moveCamera(-5, 0);
             }
             else if (cursors.right.isDown) {
-                moveCamera(5, 0);
+                this.moveCamera(5, 0);
             }
 
             if (cursors.up.isDown) {
-                moveCamera(0, -5);
+                this.moveCamera(0, -5);
             }
             else if (cursors.down.isDown) {
-                moveCamera(0, 5);
+                this.moveCamera(0, 5);
             }
         }
     }

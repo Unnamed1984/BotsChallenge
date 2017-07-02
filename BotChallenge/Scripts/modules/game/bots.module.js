@@ -2,9 +2,9 @@
  * Created by Paul on 14.04.2017.
  */
 
-define("modules/game/camera.module", function (CameraModule) {
-
-    var cameraModule = new CameraModule();
+define(["modules/game/camera.module",
+        "modules/game/compilation.module"], function (CameraModule, CompilationModule) {
+    "use strict"
 
     class BotsModule {
 
@@ -13,81 +13,93 @@ define("modules/game/camera.module", function (CameraModule) {
             this.controller = controller;
         }
 
-        this.onBotDown = function onBotDown(sprite, pointer) {
+        get cameraModule() {
+            if (!this.__cameraModule) {
+                this.__cameraModule = new CameraModule(this.game, this.controller);
+            }
+            return this.__cameraModule;
+        }
+
+        get compilationModule() {
+            if (!this.__compilationModule) {
+                this.__compilationModule = new CompilationModule(this.game, this.controller);
+            }
+            return this.__compilationModule;
+        }
+
+        onBotDown(sprite, pointer) {
             sprite.animations.play("selected");
 
-            cameraModule.focusCameraOnSprite(sprite);
+            this.cameraModule.focusCameraOnSprite(sprite);
 
             var selectedBot = this.controller.getSelectedBot();
-            if (selectedBot.content != null) {
-            selectedBot.content.sprite.animations.stop();
-            selectedBot.content.sprite.frame = 0;
-            deselectListItem(selectedBot.content.Id);
 
-            saveCode(selectedBot);
-        }
+            if (selectedBot.content != null) {
+                selectedBot.content.sprite.animations.stop();
+                selectedBot.content.sprite.frame = 0;
+                this.deselectListItem(selectedBot.content.Id);
+
+                this.saveCode(selectedBot);
+            }
 
             var bots = this.controller.getBots();
 
             for (var i = 0; i < bots.length; i++) {
-            if (bots[i].sprite.renderOrderID == sprite.renderOrderID) {
-                selectedBot.content = bots[i];
-                displayCode(selectedBot.content);
-                displayErrorsState(selectedBot.content);
+                if (bots[i].sprite.renderOrderID == sprite.renderOrderID) {
+                    selectedBot.content = bots[i];
+                    this.displayCode(selectedBot.content);
+                    this.displayErrorsState(selectedBot.content);
+                }
             }
-        }
 
-            selectListItem(selectedBot.content.id);
+            this.selectListItem(selectedBot.content.id);
 
             selectedBot.content.sprite.animations.play('selected');
         }
 
-        function deselectListItem(id) {
+        deselectListItem(id) {
             document.getElementById(id).classList.remove('active');
         }
 
-        function selectListItem(id) {
+        selectListItem(id) {
             document.getElementById(id).classList.add('active');
         }
 
-        function saveCode(selectedBot) {
+        saveCode(selectedBot) {
             selectedBot.content.Code = document.getElementById('code').value;
 
             localStorage.setItem('bot' + selectedBot.content.Id, selectedBot.content.Code);
         }
 
-        function displayCode(selectedBot) {
+        displayCode(selectedBot) {
             document.getElementById('code').value = selectedBot.Code;
         }
 
-        function saveErrorsState(selectedBot) {
+        saveErrorsState(selectedBot) {
             localStorage.setItem('bot_isCodeCorrect' + selectedBot.content.Id, selectedBot.content.IsCodeCorrect);
             localStorage.setItem('bot_errors' + selectedBot.content.Id, JSON.stringify(selectedBot.content.Errors));
         }
 
-        function displayErrorsState(selectedBot) {
+        displayErrorsState(selectedBot) {
             var isCorrect = localStorage.getItem('bot_isCodeCorrect' + selectedBot.Id);
             var errors = JSON.parse(localStorage.getItem('bot_errors' + selectedBot.Id));
 
             switch (isCorrect) {
                 case null:
-                    setCodeAsDefault();
-                    highLightPanelAsDefault();
+                    this.compilationModule.setCodeAsDefault();
+                    this.compilationModule.highLightPanelAsDefault();
                     break;
                 case 'false':
-                    setCodeAsIncorrect(errors);
-                    highLightPanelAsIncorrect(errors);
+                    this.compilationModule.setCodeAsIncorrect(errors);
+                    this.compilationModule.highLightPanelAsIncorrect(errors);
                     break;
                 case 'true':
-                    setCodeAsCorrect();
-                    highLightPanelAsCorrect();
+                    this.compilationModule.setCodeAsCorrect();
+                    this.compilationModule.highLightPanelAsCorrect();
                     break;
             }
         }
-
     }
-
     return BotsModule;
-
 });
 

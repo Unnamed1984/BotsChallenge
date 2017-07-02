@@ -1,153 +1,189 @@
-﻿define([], function () { 
+﻿define(["modules/game/ajax.module",
+        "modules/game/run.module"], function (AjaxModule, RunModule) {
     "use strict"
+    
+    class CompilationModule {
 
-    function compilationHandler() {
-        var code = document.getElementById('code').value;
+        constructor(game, controller) {
+            this.game = game;
+            this.controller = controller;
+        }
 
-        var request = sendPost("/Game/CompileBot", { code: code });
-        request.onreadystatechange = function () { // (3)
-            if (request.readyState != 4) return;
+        get ajaxModule() {
+            if (!this.__ajaxModule) {
+                this.__ajaxModule = new AjaxModule();
+            }
+            return this.__ajaxModule;
+        }
 
-            if (request.status != 200) {
-                alert(request.status + ': ' + request.statusText);
-            } else {
-                var result = JSON.parse(request.responseText);
-                if (result.IsCodeCorrect) {
-                    setCodeAsCorrect();
-                    highLightPanelAsCorrect();
+        get botsModule() {
+            if (!this.__botsModule) {
+                // due to issue with circular dependencies and its support by require.
+                var BotsModule = require("modules/game/bots.module");
+
+                this.__botsModule = new BotsModule(this.game, this.controller);
+            }
+            return this.__botsModule;
+        }
+
+        get runModule() {
+            if (!this.__runModule) {
+                this.__runModule = new RunModule(this.game, this.controller);
+            }
+            return this.__runModule;
+        }
+
+        compilationHandler() {
+            var code = document.getElementById('code').value;
+            console.log(this);
+            var request = this.ajaxModule.sendPost("/Game/CompileBot", { code: code });
+            var self = this;
+            request.onreadystatechange = function () { // (3)
+                if (request.readyState != 4) return;
+
+                if (request.status != 200) {
+                    alert(request.status + ': ' + request.statusText);
                 } else {
-                    setCodeAsIncorrect(result.Errors);
-                    highLightPanelAsIncorrect(result.Errors);
+                    self.processSuccessCompilationResult(request);
                 }
 
-                saveErrorsState(controller.getSelectedBot());
             }
-
-        }
-    }
-
-    function runHandler() {
-        console.log("run handler");
-        hideUI();
-        var selected = controller.getSelectedBot();
-        saveCode(selected);
-
-        var code = [];
-
-        console.log("pushing to bots");
-
-        var bots = controller.getBots();
-        for (var i = 0; i < bots.length; i++) {
-            code.push(bots[i].Code);
         }
 
-        console.log("Sending request");
-        console.log(code);
-        console.log(bots.length);
-        var request = sendPost("/Game/CompileBots", { Code: code, BotsCount: bots.length });
-
-        // mark
-        request.onreadystatechange = function () { // (3)
-            if (request.readyState != 4) {
-                console.log('hmmm');
-                console.log(request);
-                return;
-            }
-
-            if (request.status != 200) {
-                alert(request.status + ': ' + request.statusText);
+        processSuccessCompilationResult(request) {
+            var result = JSON.parse(request.responseText);
+            
+            if (result.IsCodeCorrect) {
+                this.setCodeAsCorrect();
+                this.highLightPanelAsCorrect();
             } else {
-                var result = JSON.parse(request.responseText);
-                console.log("Request result");
-                console.log(result);
-                if (result.IsCodeCorrect) {
-                    setCodeAsCorrect();
-                    highLightPanelAsCorrect();
-                    setReady();
-                } else {
-                    setCodeAsIncorrect(result.Errors);
-                    highLightPanelAsIncorrect(result.Errors);
+                this.setCodeAsIncorrect(result.Errors);
+                this.highLightPanelAsIncorrect(result.Errors);
+            }
+
+            this.botsModule.saveErrorsState(this.controller.getSelectedBot());
+        }
+
+        runHandler() {
+            console.log("run handler");
+            this.runModule.hideUI();
+            var selected = this.controller.getSelectedBot();
+            this.botsModule.saveCode(selected);
+
+            var code = [];
+
+            console.log("pushing to bots");
+
+            var bots = this.controller.getBots();
+            for (var i = 0; i < bots.length; i++) {
+                code.push(bots[i].Code);
+            }
+
+            console.log("Sending request");
+            console.log(code);
+            console.log(bots.length);
+            var request = this.ajaxModule.sendPost("/Game/CompileBots", { Code: code, BotsCount: bots.length });
+
+            var self = this;
+            request.onreadystatechange = function () { // (3)
+                if (request.readyState != 4) {
+                    console.log('hmmm');
+                    console.log(request);
+                    return;
                 }
 
-                saveErrorsState(controller.getSelectedBot());
+                if (request.status != 200) {
+                    alert(request.status + ': ' + request.statusText);
+                } else {
+                    var result = JSON.parse(request.responseText);
+                    console.log("Request result");
+                    console.log(result);
+                    if (result.IsCodeCorrect) {
+                        self.setCodeAsCorrect();
+                        self.highLightPanelAsCorrect();
+                        self.runModule.setReady();
+                    } else {
+                        self.setCodeAsIncorrect(result.Errors);
+                        self.highLightPanelAsIncorrect(result.Errors);
+                    }
+
+                    self.botsModule.saveErrorsState(self.controller.getSelectedBot());
+                }
+
             }
-
         }
-    }
 
-    function clearErrors() {
-        var container = document.getElementById('errors');
+        clearErrors() {
+            var container = document.getElementById('errors');
 
-        while (container.firstChild) {
-            container.removeChild(container.firstChild);
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
         }
-    }
 
-    function setCodeAsIncorrect(errors) {
-        var bot = controller.getSelectedBot();
-        bot.content.IsCodeCorrect = false;
-        for (var i = 0; i < errors.length; i++) {
-            bot.content.Errors.push(errors[i]);
+        setCodeAsCorrect() {
+            var bot = this.controller.getSelectedBot();
+            bot.content.IsCodeCorrect = true;
+            bot.content.Errors = [];
         }
-    }
 
-    function highLightPanelAsIncorrect(errors) {
-        document.getElementById('statePanel').classList.remove('panel-default');
-        document.getElementById('statePanel').classList.remove('panel-success');
-        document.getElementById('statePanel').classList.add('panel-danger');
-
-        clearErrors();
-
-        fillErrorsSection(errors);
-    }
-
-    function setCodeAsCorrect() {
-        var bot = controller.getSelectedBot();
-        bot.content.IsCodeCorrect = true;
-        bot.content.Errors = [];
-    }
-
-    function highLightPanelAsCorrect() {
-        document.getElementById('statePanel').classList.remove('panel-default');
-        document.getElementById('statePanel').classList.remove('panel-danger');
-        document.getElementById('statePanel').classList.add('panel-success');
-
-        clearErrors();
-
-        fillErrorsSection([controller.getSelectedBot().content.Name + '\'s code is correct!']);
-    }
-
-    function setCodeAsDefault() {
-        var bot = controller.getSelectedBot();
-        console.log(bot);
-        bot.content.IsCodeCorrect = null;
-        bot.content.Errors = [];
-    }
-
-    function highLightPanelAsDefault() {
-        document.getElementById('statePanel').classList.remove('panel-success');
-        document.getElementById('statePanel').classList.remove('panel-danger');
-        document.getElementById('statePanel').classList.add('panel-default');
-
-        clearErrors();
-
-        fillErrorsSection([controller.getSelectedBot().content.Name + '\'s code has not been compiled yet!']);
-    }
-
-    function fillErrorsSection(errors) {
-        var errorsNode = document.getElementById('errors');
-
-        for (var i = 0; i < errors.length; i++) {
-            var p = document.createElement('p');
-            p.innerHTML = errors[i];
-            errorsNode.appendChild(p)
+        setCodeAsIncorrect(errors) {
+            var bot = this.controller.getSelectedBot();
+            bot.content.IsCodeCorrect = false;
+            for (var i = 0; i < errors.length; i++) {
+                bot.content.Errors.push(errors[i]);
+            }
         }
+
+        setCodeAsDefault() {
+            var bot = this.controller.getSelectedBot();
+            console.log(bot);
+            bot.content.IsCodeCorrect = null;
+            bot.content.Errors = [];
+        }
+
+        highLightPanelAsIncorrect(errors) {
+            document.getElementById('statePanel').classList.remove('panel-default');
+            document.getElementById('statePanel').classList.remove('panel-success');
+            document.getElementById('statePanel').classList.add('panel-danger');
+
+            this.clearErrors();
+
+            this.fillErrorsSection(errors);
+        }
+
+        highLightPanelAsCorrect() {
+            document.getElementById('statePanel').classList.remove('panel-default');
+            document.getElementById('statePanel').classList.remove('panel-danger');
+            document.getElementById('statePanel').classList.add('panel-success');
+
+            this.clearErrors();
+
+            this.fillErrorsSection([this.controller.getSelectedBot().content.Name + '\'s code is correct!']);
+        }
+
+        highLightPanelAsDefault() {
+            document.getElementById('statePanel').classList.remove('panel-success');
+            document.getElementById('statePanel').classList.remove('panel-danger');
+            document.getElementById('statePanel').classList.add('panel-default');
+
+            this.clearErrors();
+
+            this.fillErrorsSection([this.controller.getSelectedBot().content.Name + '\'s code has not been compiled yet!']);
+        }
+
+        fillErrorsSection(errors) {
+            var errorsNode = document.getElementById('errors');
+
+            for (var i = 0; i < errors.length; i++) {
+                var p = document.createElement('p');
+                p.innerHTML = errors[i];
+                errorsNode.appendChild(p)
+            }
+        }
+
     }
 
-    // register as handlers
-    return {
-        compilationHandler: compilationHandler,
-        runHandler: runHandler
-    };
+    return CompilationModule;
 
 });

@@ -1,8 +1,5 @@
-﻿define(["modules/game/bots.module", "modules/game/camera.module"], function (BotsModule, CameraModule) {
+﻿define(["modules/game/camera.module"], function (CameraModule) {
     "use strict"
-
-    var botsModule = new BotsModule();
-    var cameraModule = new CameraModule();
 
     class RunModule {
 
@@ -11,7 +8,23 @@
             this.controller = controller;
         }
 
-        function hideUI() {
+        get cameraModule() {
+            if (!this.__cameraModule) {
+                this.__cameraModule = new CameraModule(this.game, this.controller);
+            }
+            return this.__cameraModule;
+        }
+
+        get botsModule() {
+            if (!this.__botsModule) {
+                // due to issue with circular dependencies and its support by require.
+                var BotsModule = require("modules/game/bots.module");
+                this.__botsModule = new BotsModule(this.game, this.controller);
+            }
+            return this.__botsModule;
+        }
+
+        hideUI() {
             console.log('hide');
             document.getElementsByTagName('footer')[0].classList.add('display-none');
 
@@ -23,7 +36,7 @@
             }
         }
 
-        function setReady() {
+        setReady() {
             this.controller.setGameState("ready");
 
             var login = sessionStorage.getItem('botsLogin');
@@ -33,16 +46,17 @@
             var signalRGame = $.connection.gameHub;
             signalRGame.server.setReadyForGame(login);
 
-            addText('Waiting for another player...', '#c9eaf2');
+            this.addText('Waiting for another player...', '#c9eaf2');
             this.controller.setGameState('gameIsGoing');
         }
 
-        function playMovie(movieParams) {
+        playMovie(movieParams) {
             console.log(movieParams);
 
             window.counter = 0;
 
             deleteText();
+            var self = this;
             window.intervalId = setInterval(function () {
                 if (+window.counter == movieParams.Commands.length - 1) {
                     clearInterval(+window.intervalId);
@@ -74,8 +88,8 @@
                             console.log(botId);
                             if (bots[i].Name == botId) {
                                 console.log('bot was found');
-                                botsModule.onBotDown(bots[i].sprite);
-                                cameraModule.focusCameraOnTile(bots[i].X, bots[i].Y);
+                                self.botsModule.onBotDown(bots[i].sprite);
+                                self.cameraModule.focusCameraOnTile(bots[i].X, bots[i].Y);
                                 setTimeout(function () {
                                     bots[i].move(+stepParams[2], +stepParams[3]);
                                 }, 2000);
@@ -89,7 +103,7 @@
                             console.log(enemyBots[i].Name);
                             if (enemyBots[i].Name == botId) {
                                 console.log("enemyBot was found");
-                                cameraModule.focusCameraOnTile(enemyBots[i].X, enemyBots[i].Y);
+                                self.cameraModule.focusCameraOnTile(enemyBots[i].X, enemyBots[i].Y);
                                 setTimeout(function () {
                                     enemyBots[i].move(+stepParams[2], +stepParams[3]);
                                 }, 2000);
@@ -105,9 +119,9 @@
             }, 5000);
         }
 
-        function addText(text, color) {
+        addText(text, color) {
             var style = { font: 'bold 60pt Arial', fill: color, align: 'center', wordWrap: true, wordWrapWidth: 600 };
-            var text = game.add.text(game.world.centerX, game.world.centerY, text, style);
+            var text = this.game.add.text(this.game.world.centerX, this.game.world.centerY, text, style);
             text.padding.set(10, 16);
             text.anchor.setTo(0.5, 0.5);
 
@@ -116,10 +130,10 @@
             }
 
             this.controller.label = text;
-            cameraModule.focusCameraOnSprite(text);
+            this.cameraModule.focusCameraOnSprite(text);
         }
 
-        function deleteText() {
+        deleteText() {
             if (this.controller.label != '') {
                 this.controller.label.destroy();
             }

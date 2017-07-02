@@ -63,4 +63,6 @@ define(["core/Bot"], function (Bot) {
             this.gameState = state;
         }
     }
+
+    return BotsController;
 });
