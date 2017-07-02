@@ -237,8 +237,10 @@
     <Content Include="Scripts\modules\game\compilation.module.js" />
     <Content Include="Scripts\modules\game\initializing.module.js" />
     <Content Include="Scripts\modules\game\run.module.js" />
+    <Content Include="Scripts\modules\game\signalR.module.js" />
     <Content Include="Scripts\modules\registration\registration.module.js" />
     <Content Include="Scripts\modules\util.js" />
+    <Content Include="Scripts\pages\game.page.js" />
     <Content Include="Scripts\pages\registration.page.js" />
     <Content Include="Scripts\require.config.js" />
     <Content Include="Scripts\register.js" />
