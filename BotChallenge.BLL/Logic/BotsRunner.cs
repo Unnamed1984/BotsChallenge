@@ -12,8 +12,9 @@ using BotChallenge.Compiler.Compilers.Models;
 using BotChallenge.Compiler.Compilers;
 using BotChallenge.BLL.JsonLoad.MapParser;
 using BotChallenge.Runner.CodeRunners.FinishGame;
-using BotChallenge.BLL.Models;
+using BotChallenge.BLL.Entities.ResultOfGame;
 using AutoMapper;
+using BotChallenge.BLL.Models;
 
 namespace BotChallenge.BLL.Logic
 {
@@ -38,10 +39,16 @@ namespace BotChallenge.BLL.Logic
             mapper = mapperConfig.CreateMapper();
         }
 
-        public void RunCode(string[] firstPlayerCode, string[] secondPlayerCode, string pathToField, GameFinishType finishType, IEnumerable<BLL.Models.Bot> bots1, IEnumerable<BLL.Models.Bot> bots2, int finalX = 0, int finalY = 0)
+        public void RunCode(Game g, string pathToField, GameFinishType finishType, int finalX = 0, int finalY = 0)
         {
-            CompilationResult compResult1 = compiler.CompileCode(TaskParameters.Build(firstPlayerCode.Length), firstPlayerCode);
-            CompilationResult compResult2 = compiler.CompileCode(TaskParameters.Build(secondPlayerCode.Length), secondPlayerCode);
+            Player firstPlayer = g.Players.First();
+
+            CompilationResult compResult1 = compiler.CompileCode(TaskParameters.Build(firstPlayer.BotsCount), firstPlayer.BotsCode);
+            compResult1.InformationForCodeRunner.PlayerName = firstPlayer.Name;
+
+            Player secondPlayer = g.Players.Last();
+            CompilationResult compResult2 = compiler.CompileCode(TaskParameters.Build(secondPlayer.BotsCount), secondPlayer.BotsCode);
+            compResult2.InformationForCodeRunner.PlayerName = secondPlayer.Name;
 
             if (!compResult1.IsCodeCorrect || !compResult2.IsCodeCorrect)
             {
@@ -51,8 +58,8 @@ namespace BotChallenge.BLL.Logic
             FieldBuilder fieldBuilder = new FieldBuilder(pathToField);
 
             Runner.CodeRunners.Models.Field field = fieldBuilder.GetFieldForRunner();
-            field = fieldBuilder.PlaceBots(field, bots1.Select(b => new Models.Bot(b.X, b.Y, b.Name)), 1);
-            field = fieldBuilder.PlaceBots(field, bots2.Select(b => new Models.Bot(b.X, b.Y, b.Name)), 2);
+            field = fieldBuilder.PlaceBots(field, g.Field.Bots[firstPlayer.Name], 1);
+            field = fieldBuilder.PlaceBots(field, g.Field.Bots[secondPlayer.Name], 2);
 
             FinishGameCondition finishCondition = null;
 
@@ -65,8 +72,9 @@ namespace BotChallenge.BLL.Logic
                 finishCondition = new BotOnPointCondition(finalX, finalY);
             }
 
-            IEnumerable<Runner.CodeRunners.Models.Bot> runnerBots1 = bots1.Select(mapper.Map<Runner.CodeRunners.Models.Bot>);
-            IEnumerable<Runner.CodeRunners.Models.Bot> runnerBots2 = bots2.Select(mapper.Map<Runner.CodeRunners.Models.Bot>);
+            IEnumerable<Runner.CodeRunners.Models.Bot> runnerBots1 = g.Field.Bots[firstPlayer.Name].Select(mapper.Map<Runner.CodeRunners.Models.Bot>);
+
+            IEnumerable<Runner.CodeRunners.Models.Bot> runnerBots2 = g.Field.Bots[secondPlayer.Name].Select(mapper.Map<Runner.CodeRunners.Models.Bot>);
 
             runner.RunCodeGame(compResult1.InformationForCodeRunner, compResult2.InformationForCodeRunner, field, runnerBots1, runnerBots2, finishCondition);
 
@@ -75,9 +83,24 @@ namespace BotChallenge.BLL.Logic
 
         private void Runner_GameFinished(object sender, GameFinishedEventArgs e)
         {
-            GameFinished?.Invoke(this, e);
+            FinishEventArgs finishEventArgs = new FinishEventArgs();
+            finishEventArgs.WinnerName = e.WinnerName;
+            finishEventArgs.Commands = new List<Command>();
+
+            foreach (var command in e.Commands)
+            {
+                finishEventArgs.Commands.Add(new Command()
+                {
+                    PlayerName = command.PlayerName,
+                    ActionType = command.ActionType.ToString(),
+                    BotId = command.BotId,
+                    StepParams = command.StepParams
+                });
+            }
+
+            GameFinished?.Invoke(this, finishEventArgs);
         }
 
-        public event EventHandler<GameFinishedEventArgs> GameFinished;
+        public event EventHandler<FinishEventArgs> GameFinished;
     }
 }

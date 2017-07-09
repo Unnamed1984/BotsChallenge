@@ -94,9 +94,11 @@ namespace BotChallenge.Runner.CodeRunners
                     Console.WriteLine("user command processed");
                 };
 
-                player1Process = Process.Start(csRunInfo1.PathToExecutable, $" { dirPath } { fileName } { csRunInfo1.PlayerName } { generateStringParameterForBots(bots1) }");
+                string arg1 = $" { dirPath } { fileName } { csRunInfo1.PlayerName } { generateStringParameterForBots(bots1) }";
+                player1Process = Process.Start(csRunInfo1.PathToExecutable, arg1);
 
-                player2Process = Process.Start(csRunInfo2.PathToExecutable, $" { dirPath } { fileName } { csRunInfo2.PlayerName } { generateStringParameterForBots(bots2) } ");
+                string arg2 = $" { dirPath } { fileName } { csRunInfo2.PlayerName } { generateStringParameterForBots(bots2) }";
+                player2Process = Process.Start(csRunInfo2.PathToExecutable, arg2);
 
             }
 

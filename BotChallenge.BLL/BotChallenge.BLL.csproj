@@ -53,6 +53,7 @@
     <Compile Include="Entities\Enums\PointType.cs" />
     <Compile Include="Entities\Field.cs" />
     <Compile Include="Entities\Game.cs" />
+    <Compile Include="Entities\ResultOfGame\FinishEventArgs.cs" />
     <Compile Include="JsonLoad\MapParser\FieldBuilder.cs" />
     <Compile Include="JsonLoad\MapParser\Models\FieldTileSetModel.cs" />
     <Compile Include="JsonLoad\MapParser\Models\LayerTileSetModel.cs" />

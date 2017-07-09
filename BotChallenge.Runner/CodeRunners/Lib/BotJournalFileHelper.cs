@@ -66,7 +66,7 @@ namespace BotChallenge.Runner.CodeRunners.Lib
         }
 
         /// <summary>
-        /// Process each line of commands part of boitJournal file. 
+        /// Process each line of commands part of botJournal file. 
         /// Each next command line should be -> 'PlayerName BotId ActionType [ action parameters ] '
         /// </summary>
         /// <param name="line"> line to process </param>
@@ -79,7 +79,7 @@ namespace BotChallenge.Runner.CodeRunners.Lib
             {
                 return new GameCommand()
                 {
-                    PlayerName = lineParts[0]
+                    PlayerName = lineParts[0].Trim()
                 };
             }
 
@@ -90,10 +90,10 @@ namespace BotChallenge.Runner.CodeRunners.Lib
 
             return new GameCommand()
             {
-                PlayerName = lineParts[0],
-                BotId = lineParts[1],
-                ActionType = (GameAction)Enum.Parse(typeof(GameAction), lineParts[2]),
-                StepParams = lineParts.Skip(3).ToArray()
+                PlayerName = lineParts[0].Trim(),
+                BotId = lineParts[1].Trim(),
+                ActionType = (GameAction)Enum.Parse(typeof(GameAction), lineParts[2].Trim()),
+                StepParams = lineParts.Skip(3).Select(s => s.Trim()).ToArray()
             };
         }
 

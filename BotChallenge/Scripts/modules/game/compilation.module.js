@@ -76,7 +76,7 @@
 
             var bots = this.controller.getBots();
             for (var i = 0; i < bots.length; i++) {
-                code.push(bots[i].Code);
+                code.push({ Code: bots[i].Code, Name: bots[i].Name });
             }
 
             console.log("Sending request");

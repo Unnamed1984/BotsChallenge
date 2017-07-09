@@ -1,4 +1,4 @@
-﻿using BotChallenge.BLL.Models.ResultOfGame;
+﻿using BotChallenge.BLL.Entities.ResultOfGame;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +26,7 @@ namespace BotChallenge.BLL.Models
         public Int32 String { get; set; }
         public Field Field { get; set; }
         public bool IsReady { get; set; }
+        public bool IsCodeExecuted { get; set; } = false;
 
         #region Player's registration and notification
 

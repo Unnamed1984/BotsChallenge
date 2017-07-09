@@ -5,9 +5,9 @@ using System.Web;
 
 namespace BotChallenge.Models
 {
-    public class RunBotsModel
+    public class CompilationBotsModel
     {
-        public CompilationBotsModel[] Code { get; set; }
-        public Int32 BotsCount { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
     }
 }

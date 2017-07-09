@@ -23,6 +23,13 @@ namespace Bots.Run
         public static void Main(string[] args)
         {
             Console.WriteLine("Bot competition started");
+            Console.WriteLine("Runed with next parameters ");
+
+            for (int i = 0; i < args.Length; i++)
+            {
+                Console.Write($"{ args[i] } ");
+            }
+            Console.WriteLine();
 
             Assembly a = typeof(Program).Assembly;
 

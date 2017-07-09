@@ -20,7 +20,7 @@
 
             var codeCollection = [];
             for (var i = 0; i < bots.length; i++) {
-                codeCollection.push(bots[i].Code);
+                codeCollection.push({ Code: bots[i].Code, Name: bots[i].Name});
             }
 
             signalRGame.server.runGameLast({

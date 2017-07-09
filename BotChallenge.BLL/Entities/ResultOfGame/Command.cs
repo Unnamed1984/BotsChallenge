@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BotChallenge.BLL.Models.ResultOfGame
+namespace BotChallenge.BLL.Entities.ResultOfGame
 {
     public class Command
     {
-        public Int32 BotId { get; set; }
-        // public Actions...
+        public string PlayerName { get; set; }
+        public string BotId { get; set; }
+        public string ActionType { get; set; }
+        public string[] StepParams { get; set; }
     }
 }

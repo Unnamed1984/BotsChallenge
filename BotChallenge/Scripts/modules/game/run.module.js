@@ -55,7 +55,7 @@
 
             window.counter = 0;
 
-            deleteText();
+            this.deleteText();
             var self = this;
             window.intervalId = setInterval(function () {
                 if (+window.counter == movieParams.Commands.length - 1) {
