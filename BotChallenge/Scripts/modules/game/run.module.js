@@ -68,8 +68,8 @@
                     }
                 }
 
-                var bots = this.controller.getBots();
-                var enemyBots = this.controller.getEnemyBots();
+                var bots = self.controller.getBots();
+                var enemyBots = self.controller.getEnemyBots();
 
                 var login = sessionStorage.getItem('botsLogin');
                 var command = movieParams.Commands[+window.counter];

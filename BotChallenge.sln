@@ -17,6 +17,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BotChallenge.Tests", "BotCh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotChallenge.BLL.UnitTests", "BotChallenge.BLL.UnitTests\BotChallenge.BLL.UnitTests.csproj", "{B3232C9F-4FC8-4F77-878D-D7E8604B008A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotChallenge.DAL.Shared", "BotChallenge.DAL.Shared\BotChallenge.DAL.Shared.csproj", "{83FF2AA8-E24F-4371-8809-92A3A14E50EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotChallenge.DAL.Relational", "BotChallenge.DAL.Relative\BotChallenge.DAL.Relational.csproj", "{057FD131-616A-423C-B09E-F302338D4BB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotChallenge.DAL.DI", "BotChallenge.DAL.DI\BotChallenge.DAL.DI.csproj", "{85E7D9A2-3D8D-4D9E-8753-F1EA7343F153}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BotChallenge.DAL", "BotChallenge.DAL", "{DF03C24E-F8FB-4773-A69C-A6EFBA5263B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,11 +55,26 @@ Global
 		{B3232C9F-4FC8-4F77-878D-D7E8604B008A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3232C9F-4FC8-4F77-878D-D7E8604B008A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3232C9F-4FC8-4F77-878D-D7E8604B008A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83FF2AA8-E24F-4371-8809-92A3A14E50EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83FF2AA8-E24F-4371-8809-92A3A14E50EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83FF2AA8-E24F-4371-8809-92A3A14E50EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83FF2AA8-E24F-4371-8809-92A3A14E50EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{057FD131-616A-423C-B09E-F302338D4BB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{057FD131-616A-423C-B09E-F302338D4BB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{057FD131-616A-423C-B09E-F302338D4BB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{057FD131-616A-423C-B09E-F302338D4BB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85E7D9A2-3D8D-4D9E-8753-F1EA7343F153}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85E7D9A2-3D8D-4D9E-8753-F1EA7343F153}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85E7D9A2-3D8D-4D9E-8753-F1EA7343F153}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85E7D9A2-3D8D-4D9E-8753-F1EA7343F153}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B3232C9F-4FC8-4F77-878D-D7E8604B008A} = {98952305-179C-413E-9F21-4C68C0D27B5D}
+		{83FF2AA8-E24F-4371-8809-92A3A14E50EB} = {DF03C24E-F8FB-4773-A69C-A6EFBA5263B5}
+		{057FD131-616A-423C-B09E-F302338D4BB9} = {DF03C24E-F8FB-4773-A69C-A6EFBA5263B5}
+		{85E7D9A2-3D8D-4D9E-8753-F1EA7343F153} = {DF03C24E-F8FB-4773-A69C-A6EFBA5263B5}
 	EndGlobalSection
 EndGlobal

@@ -162,7 +162,7 @@ namespace BotChallenge.Runner.CodeRunners
             }
 
             // TODO: detect winner basing on last field state
-            GameFinished?.Invoke(this, new GameFinishedEventArgs(null, commands));
+            GameFinished?.Invoke(this, new GameFinishedEventArgs(commands.Last().PlayerName, commands));
         }
 
         private int getHeightFromInitLine(string line)
